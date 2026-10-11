@@ -69,6 +69,20 @@ def checks(wf, trace_text, api_path, base):
         if tool in names:
             add("PASS" if hooks_post.get(tool) else "WARN", f"{tool} has a post-hook (what_to_do_next / failure shapes)", "")
     lifecycle = [t for t in (wf.get("tools") or []) if (t.get("config") or {}).get("alwaysRunsAt")]
+    # the close outcome must be decided by code on every path, not guessed by a model after the call ended
+    blob = json.dumps(wf)
+    for t in lifecycle:
+        body = (((t.get("function") or {}).get("parameters") or {}).get("properties") or {}).get("body", {}).get("properties", {})
+        for fld in ("outcome", "reason"):
+            dflt = str((body.get(fld) or {}).get("default", ""))
+            m = re.fullmatch(r"\{\{\s*([\w.]+)\s*\}\}", dflt)
+            if fld in body and not m:
+                add("WARN", f"close {fld} is not taken from a variable", dflt[:60])
+            elif m:
+                var = m.group(1)
+                writers = len(re.findall(r"vars\[\?['\"]" + re.escape(var) + r"\?['\"]\]\s*=", blob))
+                add("PASS" if writers >= 3 else "FAIL", f"close {fld} variable '{var}' is set by code on the paths that end calls",
+                    f"{writers} code/hook writes (early ends like declined, wrong number, deceased, unclear need their own)")
     add("PASS" if lifecycle else "WARN", "close tool is engine-run (lifecycle) or otherwise guaranteed", f"{len(lifecycle)} lifecycle tool(s)")
     code_nodes = [k for k, n in nodes.items() if n.get("node_type") == "code"]
     hook_writers = [f.get("name") for n in list(nodes.values()) + list(gnodes.values())
