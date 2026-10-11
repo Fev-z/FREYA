@@ -46,6 +46,14 @@ The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: t
    Never end on an untested save. If there is no time to test a change, save the last tested version again (`out/<slot>.tested.json`: copy the workflow there after every test run that scored at least as well as the one before) so the agent on Freya is one whose score you know.
    One green run is a hint, not proof: the same agent can fail the same customer next time. If everything passed and at least 12 minutes are left before the hard stop, run once more with `--style` set to one of `pieces`, `corrects`, `in_words`, `asks_back`, `talkative` and fix what breaks. Keep the last saved version that passed if a fix makes things worse.
 
+## When the platform, not the agent, is failing
+
+The agent's model is shared by every team and is sometimes overloaded. Signs: most calls end with no tool calls and the customer hanging up, `run_cases.py` reports a median slowest turn of 0 s or above 10 s, or a chat turn after the opening returns 504.
+- Do not change the workflow because of such a run. Its score says nothing about the agent.
+- Check with one chat turn after the opening line. If that times out, wait a few minutes and try one chat turn again before any further simulation.
+- Never save another workflow (the kit example or anything else) into your slot to diagnose. Use a chat turn instead.
+- If the platform stays down until the hard stop: make sure the slot holds your best reviewed or last tested workflow, say in your final line that the last test was invalid because the platform did not answer, and stop.
+
 ## Several products per customer
 
 If the account can hold more than one product, keep the per-product state in variables written by code, not in the model's memory: the ordered product list, each product's band, deadline, floor and attempts used, which product is being discussed now, and which got a promise, a note or nothing. Let code pick the next product and the outcome/reason of the close call from that state. The prompt only talks about the current product and quotes the values code computed.
