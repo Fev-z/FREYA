@@ -1,0 +1,13 @@
+{
+  "team": "<TAKIM ADI>",
+  "members": [
+    { "name": "Egemen <SOYAD>", "email": "egemenayrac@gmail.com" },
+    { "name": "<EKİP ARKADAŞI>", "email": "<E-POSTA>" }
+  ],
+  "repo": "https://github.com/egemenayrac/freya-agent-builder",
+  "commit": "b7a6713",
+  "run_command": "python3 builder/build.py {case_folder} {mock_url}/voice/v1 --slot final",
+  "workflow": "submission/final.workflow.json",
+  "trace": "traces/final.log",
+  "mock_url": "https://freya-bank-final.egemenayrac.workers.dev"
+}
