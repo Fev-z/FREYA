@@ -57,7 +57,7 @@ def collect_inputs(paths):
 # What a run may see: the platform docs, the Freya client, the test tools, the skill, the base example.
 # Not the practice briefs, not earlier workflows or generators: a final agent must come from the final documents only.
 KIT_FILES = ["freya.py", "docs/workflow-format.md", "docs/tools-and-code.md", "docs/api.md", "tools/run_cases.py", "tools/score.py",
-             "examples/base-agent.json", ".claude/skills"]
+             "examples/base-agent.json", ".claude/skills", "qa/qa_check.py", "qa/lint.py"]
 
 
 def make_workspace(slot, files, stamp):
