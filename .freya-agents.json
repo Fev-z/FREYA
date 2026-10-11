@@ -21,6 +21,12 @@
  },
  "final": {
   "workflow_id": "ea6f5726-396a-42ec-8272-d9af8418378c",
-  "agent_id": "c220d8e3-765f-4140-94ab-33d28ff6cdd8"
+  "agent_id": "c220d8e3-765f-4140-94ab-33d28ff6cdd8",
+  "version": 7
+ },
+ "final-2": {
+  "workflow_id": "3305d74f-d1ea-4a4a-891f-6f7d000d3302",
+  "agent_id": "bf7c0c59-4518-4319-a92e-167e3303fa7c",
+  "version": 4
  }
 }
