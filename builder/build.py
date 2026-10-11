@@ -98,6 +98,7 @@ class Trace:
         self.jsonl = (KIT / "traces" / f"{stamp}-{slot}.jsonl").open("w")
         self.path = self.log.name
         self.model_calls = 0
+        self.session = None
 
     def line(self, kind, text):
         msg = scrub(f"{now()}  {kind:<8} {text}")
@@ -123,6 +124,7 @@ async def run_claude(trace, prompt, options):
     pending = {}                                              # tool_use_id -> tool name, to label results
     async for message in query(prompt=prompt, options=options):
         trace.raw(message)
+        trace.session = getattr(message, "session_id", None) or trace.session   # to resume after a dropped connection
         if isinstance(message, AssistantMessage):
             trace.model_calls += 1
             texts = [b.text for b in message.content if isinstance(b, TextBlock) and b.text.strip()]
@@ -202,12 +204,25 @@ def main():
              "PATH": str(pathlib.Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", ""),
              "BUILDER_SLOT": slot, "BUILDER_MOCK_URL": a.mock or ""},
     )
-    try:
-        asyncio.run(asyncio.wait_for(run_claude(trace, prompt, options), timeout=BUDGET_MIN * 60))
-    except asyncio.TimeoutError:
-        trace.line("STOP", f"time budget of {BUDGET_MIN:.0f} min reached, exporting the last saved workflow")
-    except Exception as e:
-        trace.line("ERROR", f"builder crashed: {type(e).__name__}: {one_line(e, 300)}")
+    # A dropped connection to the model must not end the build: resume the same session (same workspace,
+    # same files) and let it go on, within the same time budget. At most three resumes.
+    for attempt in range(4):
+        left = BUDGET_MIN * 60 - (time.time() - t0)
+        if left < 90:
+            trace.line("STOP", f"time budget of {BUDGET_MIN:.0f} min reached, exporting the last saved workflow"); break
+        run_opts, run_prompt = options, prompt
+        if attempt:
+            if trace.session: run_opts = dataclasses.replace(options, resume=trace.session)
+            run_prompt = ("The connection to the model dropped and the build was resumed. Continue the task exactly where you left off: "
+                          f"check what is already in out/ and on Freya, then go on. The hard stop is still {deadline}.") if trace.session else prompt
+            trace.line("RESUME", f"attempt {attempt + 1}, session {trace.session or '(new)'}, {left / 60:.0f} min left")
+        try:
+            asyncio.run(asyncio.wait_for(run_claude(trace, run_prompt, run_opts), timeout=left))
+            break
+        except asyncio.TimeoutError:
+            trace.line("STOP", f"time budget of {BUDGET_MIN:.0f} min reached, exporting the last saved workflow"); break
+        except Exception as e:
+            trace.line("ERROR", f"builder crashed: {type(e).__name__}: {one_line(e, 300)}")
     merge_state_back(ws, slot)
     try:
         check_and_export(trace, slot, a.mock)
