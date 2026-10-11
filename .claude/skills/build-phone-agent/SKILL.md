@@ -107,3 +107,4 @@ A question back is not a refusal and not an answer. Answer it in one sentence an
 - When a tool call fails, the agent must say so. It must never tell the customer something is recorded when it is not.
 - A customer that passes once can fail the next time. Prefer rules in routes and code over rules in prompts.
 - One `close_call` per call, as the last tool call, with the outcome and reason the brief requires.
+- Every conversation step must speak as soon as it is entered: `on_enter` is `llm` (or a fixed `tts` line), never `silent`; only passthrough code and api steps are silent. Seen in a practice build: a step entered after identity passed had a silent entry, the agent said nothing, every customer hung up, 0 of 13 passed.
