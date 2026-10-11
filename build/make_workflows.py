@@ -494,7 +494,7 @@ try:
             a1 = dl
         facts[pid] = {'past_due': due, 'floor': floor, 'deadline': dl, 'words': words}
         order.append(pid)
-        lines.append('- product_id ' + pid + ': ' + words + '. Full past-due amount ' + money(due) + ', ' + str(late) + ' days late. Floor (' + floor_name + ') ' + money(floor) + '. Band ' + band + '. DEADLINE ' + dl + ' (' + sp(dl) + '). Persuasion attempts allowed: ' + str(attempts) + '. Attempt 1 = ' + ('the full amount' ) + ' (or the floor if the customer said the full amount is too much) on ' + a1 + ' (' + sp(a1) + ').' + (' Attempt 2 = the floor ' + money(floor) + ' on the deadline ' + dl + ' (' + sp(dl) + ').' if attempts == 2 else ' ONLY ONE ATTEMPT: if attempt 1 is refused, make NO further offer on this product (not the floor, not another date); it ends without a promise, reason refused.'))
+        lines.append('- product_id ' + pid + ': ' + words + '. Full past-due amount ' + money(due) + ', ' + str(late) + ' days late. Floor (' + floor_name + ') ' + money(floor) + '. Band ' + band + '. LATEST ALLOWED DATE for ' + pid + ': ' + dl + ' (' + sp(dl) + '). Persuasion attempts allowed: ' + str(attempts) + '. Attempt 1 = ' + ('the full amount' ) + ' (or the floor if the customer said the full amount is too much) on ' + a1 + ' (' + sp(a1) + ').' + (' Attempt 2 = the floor ' + money(floor) + ' on the deadline ' + dl + ' (' + sp(dl) + ').' if attempts == 2 else ' ONLY ONE ATTEMPT: if attempt 1 is refused, make NO further offer on this product (not the floor, not another date); it ends without a promise, reason refused.'))
         stmts.append('your ' + words + ' has a past-due amount of ' + money(due) + ' and is ' + str(late) + ' days late')
     if facts:
         vars['acct_state'] = 'ok'
@@ -508,6 +508,27 @@ try:
     else:
         vars['debt_statement'] = 'I am calling from the collections team about late payments. ' + ' '.join(s[0].upper() + s[1:] + '.' for s in stmts)
     vars['today_question'] = 'Can you make this payment today?' if len(stmts) == 1 else 'Can you pay all of them today?'
+    try:
+        nbm = df.get('next_bd') or {}
+        today_iso = df.get('today', '')
+        cal = []
+        for iso in sorted(nbm.keys())[:46]:
+            d0 = dt.date.fromisoformat(iso)
+            nb_ = nbm[iso]
+            parts = []
+            for pid in order:
+                dl_ = facts[pid]['deadline']
+                lab = pid + ' (' + facts[pid]['words'] + ')'
+                if iso > dl_:
+                    parts.append(lab + ' TOO LATE, offer its deadline ' + dl_)
+                elif nb_ != iso:
+                    parts.append(lab + ' not a business day, offer ' + nb_)
+                else:
+                    parts.append(lab + ' OK')
+            cal.append(iso + ' ' + d0.strftime('%A') + ': ' + '; '.join(parts))
+        vars['product_calendar'] = '\n'.join(cal)
+    except Exception:
+        vars['product_calendar'] = ''
     df['products'] = facts
     df['order'] = order
     vars['facts_json'] = json.dumps(df)
@@ -519,6 +540,7 @@ except Exception as e:
     vars['product_order'] = ''
     vars['facts_json'] = '{}'
     vars['today_question'] = 'Can you make this payment today?'
+    vars['product_calendar'] = ''
 """
 
 # ---------------------------------------------------------------- nodes
@@ -746,13 +768,16 @@ def brief_b():
 ACCOUNT FACTS (in get_account order; every product has its own band, deadline, floor and attempts)
 {{account_facts}}
 
+DATE CHECK PER PRODUCT (look up the customer's date here; never work it out yourself)
+{{product_calendar}}
+
 """ + DATE_RULES + "\n\n" + AMOUNT_RULES + "\n\n" + special + """
 
 GETTING THE PROMISES
 - Yes to all today: the full amount of every product, today.
 - If not: go through the products one by one in the order above. Do not ask about today again for each product. Each product starts at its own attempt 1.
 - A date or an amount the customer proposes is NEVER a refusal: check it against THAT product's rules.
-- One date named for everything: use it for each product whose deadline allows it; a product whose deadline is earlier is recorded on its own deadline, and you say so in the read-back.
+- One date named for everything: look the date up in DATE CHECK PER PRODUCT. Each product marked OK keeps the customer's date. Each product marked TOO LATE gets its own deadline instead; tell the customer and say so in the read-back.
 - A flat refusal or non-answer on a product uses one of THAT product's attempts:
   - Attempt 1: the full amount (or the floor if they said the full amount is too much) on that product's Attempt 1 date.
   - Attempt 2, only for products that allow 2 attempts: the floor on that product's deadline.

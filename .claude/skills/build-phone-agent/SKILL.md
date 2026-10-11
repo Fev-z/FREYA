@@ -41,6 +41,11 @@ The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: t
    - Quick check without a simulation: one or two chat turns (`POST /api/v2/chat/message`, see `docs/api.md`) to see the opening sentence and the first question.
    A run takes 3 to 11 minutes. Run it in the foreground and wait for it to finish. Never start it in the background and never end your turn while a test is running: the builder stops when you stop. Do not start a test that cannot finish before the hard stop.
 7. Read each FAIL line and its reason. Fix the cause in a way that would also be right for a different brief, save again, test again. At most three rounds.
+   One green run is a hint, not proof: the same agent can fail the same customer next time. If everything passed and at least 12 minutes are left before the hard stop, run once more with `--style` set to one of `pieces`, `corrects`, `in_words`, `asks_back`, `talkative` and fix what breaks. Keep the last saved version that passed if a fix makes things worse.
+
+## Several products per customer
+
+If the account can hold more than one product, keep the per-product state in variables written by code, not in the model's memory: the ordered product list, each product's band, deadline, floor and attempts used, which product is being discussed now, and which got a promise, a note or nothing. Let code pick the next product and the outcome/reason of the close call from that state. The prompt only talks about the current product and quotes the values code computed.
 8. Finish with one line: the `workflow_id`, the `agent_id` and how many customers passed in the last run. The builder script exports the workflow after you stop.
 
 ## Language

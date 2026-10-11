@@ -1,0 +1,7 @@
+2026-10-11T17:57:11+0300  START    slot ab-v2, builder model claude-opus-5-5, skill build-phone-agent, budget 28 min, mock (kit tool API)
+2026-10-11T17:57:11+0300  INPUT    briefs/brief-a.md
+2026-10-11T17:57:11+0300  INPUT    briefs/brief-b.md
+2026-10-11T17:57:11+0300  INPUT    tools/openapi.json
+2026-10-11T17:57:11+0300  INPUT    public-test-set.json
+2026-10-11T17:57:11+0300  WORKDIR  runs/20261011-175711-ab-v2 (platform docs, Freya client, test tools, skill and the inputs only)
+2026-10-11T17:57:13+0300  MODEL    claude-opus-5-5 | Skill: {'skill': 'build-phone-agent', 'args': 'Slot: ab-v2 (write out/ab-v2.workflow.js
