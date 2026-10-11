@@ -35,6 +35,9 @@ curl -s https://freya-bank-mock-team.egemenayrac.workers.dev/health
 Duman testi: `python3 mock/smoke.py https://freya-bank-mock-team.egemenayrac.workers.dev <case_id> ...` → sonda `mock OK`
 
 ## 3. 21:00 — Builder'ı çalıştır (≤ 30 dk)
+
+⚠️ Builder çalışırken aynı Freya workspace'inde **başka hiçbir simülasyon başlatma**. Workspace'te aynı anda tek simülasyon koşar. Yerelde durdurulan bir `run_cases.py`'nin simülasyonu sunucuda ~10 dk daha devam eder ve builder'ın testini bekletir.
+
 ```bash
 cd ~/Downloads/build-the-builder && source env.sh
 .venv/bin/python builder/build.py ~/Downloads/final-case/<klasör> https://freya-bank-mock-team.egemenayrac.workers.dev/v1 --slot final 2>&1 | tee traces/final.log
