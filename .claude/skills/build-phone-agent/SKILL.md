@@ -8,6 +8,7 @@ description: Build a Freya phone agent from a bank's brief, test it on the pract
 Work in the folder you were started in; the bank's documents are in `input/`. Use only what the documents you were given say. Do not copy rules, values or names from another brief, from the practice briefs or from memory. Everything the agent knows about this bank comes from these documents.
 
 The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: then use the server URL in the tool API file) and a **hard stop time**. Have a saved, working workflow well before the hard stop. A saved agent that handles most cases beats a better one that was not saved in time.
+Pace: reading takes about 4 minutes, writing a full workflow with its code about 6 to 8, one test run 3 to 11. That fits the budget with room for two fix rounds, so do not shrink the design (fewer steps, no code checks, no global interrupt nodes) because of the clock unless fewer than 10 minutes are left. A practice build that cut its design at minute 3 to "save time" scored 0 of 13.
 
 ## Steps
 
@@ -54,6 +55,14 @@ The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: t
    Never end on an untested save. If there is no time to test a change, save the last tested version again (`out/<slot>.tested.json`: copy the workflow there after every test run that scored at least as well as the one before) so the agent on Freya is one whose score you know.
    One green run is a hint, not proof: the same agent can fail the same customer next time. If everything passed and at least 12 minutes are left before the hard stop, run once more with `--style` set to one of `pieces`, `corrects`, `in_words`, `asks_back`, `talkative` and fix what breaks. Keep the last saved version that passed if a fix makes things worse.
 
+## Your own test customers (when the given ones pass and time is left)
+
+The hidden customers are not the given ones. If all given customers pass and at least 12 minutes are left before the hard stop:
+1. Write 8 to 12 cases of your own to `out/<slot>.selftests.json`, in the same format as the given test customers (`id` like `SELF-01`). Priority: one case per close outcome/reason the documents define; one case per announcement or memo that changed a rule, built so the expected result differs between the old and the new rule; one tool failure; number edges (amount exactly at the floor, a date on the deadline, a holiday, a weekend); a third party; an interrupt from `conduct.md` (robot, anger, insult, distress). Reuse the identity and products of a given customer so the mock can serve them.
+2. Compute every `expected` with code from your spec (dates, amounts, outcome), not by judgement. First check that the same code reproduces the given customers' expected results; if it does not, fix the code, not the cases.
+3. Load them into the mock (`POST /v1/practice/cases` with the team key, see `mock/`) and run them with `tools/run_cases.py --cases`. Keep a quarter of them aside and run those only once, after your fixes.
+4. Fix only causes that would be wrong for any customer (a route, a code rule, a prompt rule), never a case-specific literal. Keep the best tested version; roll back a fix that lowers the given customers' score.
+
 ## When the platform, not the agent, is failing
 
 The agent's model is shared by every team and is sometimes overloaded. Signs: most calls end with no tool calls and the customer hanging up, `run_cases.py` reports a median slowest turn of 0 s or above 10 s, or a chat turn after the opening returns 504.
@@ -66,6 +75,15 @@ The agent's model is shared by every team and is sometimes overloaded. Signs: mo
 
 If the account can hold more than one product, keep the per-product state in variables written by code, not in the model's memory: the ordered product list, each product's band, deadline, floor and attempts used, which product is being discussed now, and which got a promise, a note or nothing. Let code pick the next product and the outcome/reason of the close call from that state. The prompt only talks about the current product and quotes the values code computed.
 8. Finish with one line: the `workflow_id`, the `agent_id` and how many customers passed in the last run. The builder script exports the workflow after you stop.
+
+## Conduct beyond the documents
+
+Read `conduct.md` (next to this file) before you write the prompts. The documents always win; `conduct.md` covers what they do not: the priority order for conflicts (safety and law, honesty, the bank's rules, the customer's dignity, the goal, efficiency), the 4-step protocol for never-seen situations (acknowledge, say what you can and cannot do, offer the allowed next step, return or close), interrupts as global nodes with fixed lines (robot, scam, recording, not understood, silence, off-topic, anger, insults, distress, danger to life, legal threats, human request, stop calling, phone handed over, language switch, confused customer), no commitment without a confirmed read-back, no information the documents do not give, and natural Turkish register. Put the short version in `system_prompt`, the interrupts in `global_nodes`, and the decisions in code.
+
+## Spoken values and the universal checklist
+
+- `spoken.py` (next to this file, standard library only) turns spoken Turkish and English into the formats tools need: amounts ("dört yüz elli virgül beş" 450.5, "1.250,50 TL" 1250.5, "bin buçuk" 1500), digit strings given in pieces ("kırk dört yetmiş bir" "4471", leading zeros kept), dates relative to `now` ("haftaya Cuma", "bu Cuma", "ayın on beşi", "yirmi üç Ekim", "15/10", "yarın", "öbür gün", "next Friday") and dates of birth. `spoken.hook_source()` returns it as one self-contained snippet (no `{{`/`}}`): prepend it to a `pre_process_code` hook or a code node to coerce a value the model extracted in words, and to reject a digit string that is still too short. Check its weekday convention against the documents' rule before relying on it.
+- `checklist.md` (next to this file) lists situations any collections call can bring (dates, amounts, numbers in pieces, corrections, conversation traps, tool honesty), each with the handling and the layer that should enforce it. Go through it once while writing the spec and note in the spec where each row is handled.
 
 ## Language
 
@@ -90,3 +108,4 @@ A question back is not a refusal and not an answer. Answer it in one sentence an
 - When a tool call fails, the agent must say so. It must never tell the customer something is recorded when it is not.
 - A customer that passes once can fail the next time. Prefer rules in routes and code over rules in prompts.
 - One `close_call` per call, as the last tool call, with the outcome and reason the brief requires.
+- Every conversation step must speak as soon as it is entered: `on_enter` is `llm` (or a fixed `tts` line), never `silent`; only passthrough code and api steps are silent. Seen in a practice build: a step entered after identity passed had a silent entry, the agent said nothing, every customer hung up, 0 of 13 passed.
