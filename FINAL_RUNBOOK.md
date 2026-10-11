@@ -5,7 +5,7 @@ Builder'da yalnızca çökme gibi bug düzeltilir.
 
 ## 0. Hazırlık (19:45'e kadar)
 - [ ] `source env.sh` çalışıyor, `.venv` var
-- [ ] `npx wrangler whoami` giriş yapılmış gösteriyor
+- [x] `npx wrangler whoami` giriş yapılmış gösteriyor, subdomain `egemenayrac` kayıtlı, mock yayında
 - [ ] GitHub repo push edilmiş, son commit temiz
 - [ ] Final belgeleri repo DIŞINA açılacak: `~/Downloads/final-case/`
 
@@ -23,20 +23,21 @@ mkdir -p ~/Downloads/final-case && cd ~/Downloads/final-case && unzip ~/Download
 - [ ] Hata biçimi: sözleşme ne diyorsa (500 mü, `ok:false` mı)
 - [ ] `mock/cases.json`: test müşterilerini kit formatına çevir (`id, variables, identity, products, script, expected, checks`, `"language": "tr"`)
 - [ ] Practice yolları (`/v1/practice/...`) kalsın: builder testleri bunlarla koşar
+- [ ] Takım key kontrolü Worker girişinde (`export default fetch`) kalsın, Durable Object içine taşıma (orada secret görünmüyor)
 
 Deploy:
 ```bash
 cd mock
 npx wrangler deploy
 source ../env.sh && printf '%s' "$FREYA_BANK_TEAM_KEY" | npx wrangler secret put TEAM_KEY
-curl -s https://<worker>.workers.dev/health
+curl -s https://freya-bank-mock-team.egemenayrac.workers.dev/health
 ```
-Duman testi: `python3 mock/smoke.py https://<worker>.workers.dev <case_id> ...` → sonda `mock OK`
+Duman testi: `python3 mock/smoke.py https://freya-bank-mock-team.egemenayrac.workers.dev <case_id> ...` → sonda `mock OK`
 
 ## 3. 21:00 — Builder'ı çalıştır (≤ 30 dk)
 ```bash
 cd ~/Downloads/build-the-builder && source env.sh
-.venv/bin/python builder/build.py ~/Downloads/final-case/<klasör> https://<worker>.workers.dev/v1 --slot final 2>&1 | tee traces/final.log
+.venv/bin/python builder/build.py ~/Downloads/final-case/<klasör> https://freya-bank-mock-team.egemenayrac.workers.dev/v1 --slot final 2>&1 | tee traces/final.log
 ```
 - Sonda `CHECK all tool URLs point at the mock` yazmalı
 - Çıktı: `submission/final.workflow.json`, `traces/<zaman>-final.log`
@@ -62,7 +63,7 @@ git add builder mock submission traces FINAL_RUNBOOK.md && git commit -m "Final 
   "run_command": "python3 builder/build.py {case_folder} {mock_url} --slot final",
   "workflow": "submission/final.workflow.json",
   "trace": "traces/<zaman>-final.log",
-  "mock_url": "https://<worker>.workers.dev"
+  "mock_url": "https://freya-bank-mock-team.egemenayrac.workers.dev"
 }
 ```
 - [ ] Mail ile gönder (kit mail'indeki adres), 23:00'den önce
