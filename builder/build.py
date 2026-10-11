@@ -139,7 +139,7 @@ async def run_claude(trace, prompt, options):
                 if not isinstance(b, ToolResultBlock): continue
                 out = tool_result_text(b)
                 for m in re.finditer(r'\{[^{}]*"workflow_id"[^{}]*\}', out): trace.line("FREYA", "saved: " + m.group(0))
-                for m in re.finditer(r"^(PASS|FAIL) .*$|^\d+ / \d+ passed.*$", out, re.M): trace.line("TEST", one_line(m.group(0), 240))
+                for m in re.finditer(r"^(PASS|FAIL) .*$|^\s+- .*$|^\d+ / \d+ passed.*$|^slowest agent turn.*$|^WARNING.*$", out, re.M): trace.line("TEST", one_line(m.group(0), 240))
         elif isinstance(message, ResultMessage):
             trace.line("CLAUDE", f"done: {message.num_turns} turns, {message.duration_ms / 1000:.0f} s, ${message.total_cost_usd or 0:.2f}")
 

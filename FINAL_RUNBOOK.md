@@ -31,7 +31,7 @@ npx wrangler deploy
 source ../env.sh && printf '%s' "$FREYA_BANK_TEAM_KEY" | npx wrangler secret put TEAM_KEY
 curl -s https://<worker>.workers.dev/health
 ```
-Duman testi: bir session aç, kimlik doğrula, hesap al, söz ver, ledger'ı oku (bkz. bu repodaki test komutları).
+Duman testi: `python3 mock/smoke.py https://<worker>.workers.dev <case_id> ...` → sonda `mock OK`
 
 ## 3. 21:00 — Builder'ı çalıştır (≤ 30 dk)
 ```bash
