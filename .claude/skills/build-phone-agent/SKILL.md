@@ -54,6 +54,14 @@ The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: t
    Never end on an untested save. If there is no time to test a change, save the last tested version again (`out/<slot>.tested.json`: copy the workflow there after every test run that scored at least as well as the one before) so the agent on Freya is one whose score you know.
    One green run is a hint, not proof: the same agent can fail the same customer next time. If everything passed and at least 12 minutes are left before the hard stop, run once more with `--style` set to one of `pieces`, `corrects`, `in_words`, `asks_back`, `talkative` and fix what breaks. Keep the last saved version that passed if a fix makes things worse.
 
+## Your own test customers (when the given ones pass and time is left)
+
+The hidden customers are not the given ones. If all given customers pass and at least 12 minutes are left before the hard stop:
+1. Write 8 to 12 cases of your own to `out/<slot>.selftests.json`, in the same format as the given test customers (`id` like `SELF-01`). Priority: one case per close outcome/reason the documents define; one case per announcement or memo that changed a rule, built so the expected result differs between the old and the new rule; one tool failure; number edges (amount exactly at the floor, a date on the deadline, a holiday, a weekend); a third party; an interrupt from `conduct.md` (robot, anger, insult, distress). Reuse the identity and products of a given customer so the mock can serve them.
+2. Compute every `expected` with code from your spec (dates, amounts, outcome), not by judgement. First check that the same code reproduces the given customers' expected results; if it does not, fix the code, not the cases.
+3. Load them into the mock (`POST /v1/practice/cases` with the team key, see `mock/`) and run them with `tools/run_cases.py --cases`. Keep a quarter of them aside and run those only once, after your fixes.
+4. Fix only causes that would be wrong for any customer (a route, a code rule, a prompt rule), never a case-specific literal. Keep the best tested version; roll back a fix that lowers the given customers' score.
+
 ## When the platform, not the agent, is failing
 
 The agent's model is shared by every team and is sometimes overloaded. Signs: most calls end with no tool calls and the customer hanging up, `run_cases.py` reports a median slowest turn of 0 s or above 10 s, or a chat turn after the opening returns 504.
