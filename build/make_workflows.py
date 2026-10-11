@@ -494,7 +494,7 @@ try:
             a1 = dl
         facts[pid] = {'past_due': due, 'floor': floor, 'deadline': dl, 'words': words}
         order.append(pid)
-        lines.append('- product_id ' + pid + ': ' + words + '. Full past-due amount ' + money(due) + ', ' + str(late) + ' days late. Floor (' + floor_name + ') ' + money(floor) + '. Band ' + band + '. DEADLINE ' + dl + ' (' + sp(dl) + '). Persuasion attempts allowed: ' + str(attempts) + '. Attempt 1 = ' + ('the full amount' ) + ' (or the floor if the customer said the full amount is too much) on ' + a1 + ' (' + sp(a1) + ').' + (' Attempt 2 = the floor ' + money(floor) + ' on the deadline ' + dl + ' (' + sp(dl) + ').' if attempts == 2 else ' No attempt 2.'))
+        lines.append('- product_id ' + pid + ': ' + words + '. Full past-due amount ' + money(due) + ', ' + str(late) + ' days late. Floor (' + floor_name + ') ' + money(floor) + '. Band ' + band + '. DEADLINE ' + dl + ' (' + sp(dl) + '). Persuasion attempts allowed: ' + str(attempts) + '. Attempt 1 = ' + ('the full amount' ) + ' (or the floor if the customer said the full amount is too much) on ' + a1 + ' (' + sp(a1) + ').' + (' Attempt 2 = the floor ' + money(floor) + ' on the deadline ' + dl + ' (' + sp(dl) + ').' if attempts == 2 else ' ONLY ONE ATTEMPT: if attempt 1 is refused, make NO further offer on this product (not the floor, not another date); it ends without a promise, reason refused.'))
         stmts.append('your ' + words + ' has a past-due amount of ' + money(due) + ' and is ' + str(late) + ' days late')
     if facts:
         vars['acct_state'] = 'ok'
@@ -704,6 +704,7 @@ GETTING THE PROMISE
   - Attempt 1: propose the full amount (or the floor if they already said the full amount is too much) on the Attempt 1 date in the facts.
   - Attempt 2, only if the facts allow 2 attempts: propose the floor on the deadline.
   - When the allowed attempts are used up, stop. Never repeat an offer they already refused. Thank them, goodbye, close_call no_promise / refused.
+  - Offering the floor is allowed only (a) once after the customer says the full amount is too much, or (b) as attempt 2 when the facts allow 2 attempts. With ONLY ONE ATTEMPT and a flat refusal, make no floor offer.
 - Count your attempts carefully. Offering the floor after "too much" is not a persuasion attempt.
 
 CONFIRMING
@@ -756,6 +757,8 @@ GETTING THE PROMISES
   - Attempt 1: the full amount (or the floor if they said the full amount is too much) on that product's Attempt 1 date.
   - Attempt 2, only for products that allow 2 attempts: the floor on that product's deadline.
   - When a product's attempts are used up, stop for that product (no promise, reason refused) and go to the next product. Never repeat a refused offer.
+  - Offering the floor is allowed only (a) once after the customer says the full amount is too much, or (b) as attempt 2 of a product that allows 2 attempts. An early-band product with a flat refusal gets attempt 1 only and NO floor offer.
+- While going through the products, do NOT read back or ask "Do you confirm?" per product. Just note what was agreed and move to the next product.
 
 CONFIRMING AND RECORDING
 - When every product is handled, read back ALL agreed promises together (product, amount, date for each) and ask ONE "Do you confirm?".

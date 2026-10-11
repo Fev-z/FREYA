@@ -5,7 +5,7 @@ description: Build a Freya phone agent from a bank's brief, test it on the pract
 
 # Build a phone agent from a brief
 
-Work from the kit folder. Use only what the documents you were given say. Do not copy rules, values or names from another brief, from the practice briefs or from memory. Everything the agent knows about this bank comes from these documents.
+Work in the folder you were started in; the bank's documents are in `input/`. Use only what the documents you were given say. Do not copy rules, values or names from another brief, from the practice briefs or from memory. Everything the agent knows about this bank comes from these documents.
 
 The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: then use the server URL in the tool API file) and a **hard stop time**. Have a saved, working workflow well before the hard stop. A saved agent that handles most cases beats a better one that was not saved in time.
 
@@ -13,7 +13,7 @@ The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: t
 
 1. **Read every document.** The input may be one or more brief files, or a case folder with many kinds of documents. In a folder, read `BRIEF.md` first, then `README.md` (it says what each document is), then every other file, including images (Read shows them) and example conversations.
    - Precedence when documents disagree: a dated announcement or memo replaces the older text it names; an answer in a questions-and-answers document clarifies the brief; the service contract (tool API) decides field names and allowed values. Example conversations show tone and phrasing; they are not rules unless the brief agrees.
-   - The tool API may be `tools/openapi.json` or a service contract inside the folder. Use the one the documents name for this case.
+   - The tool API is the OpenAPI file or service contract among the inputs. If there are several, use the one the documents name for this case.
 2. Read `docs/workflow-format.md` and `docs/tools-and-code.md`, and `examples/base-agent.json` as the JSON pattern (not as the answer).
 3. **Write the spec first: `out/<slot>.spec.md`.** Short, numbered, with the source file of each item:
    - call variables and the language of the call
@@ -34,9 +34,10 @@ The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: t
    - Leave `agent_config` out. No `null` values.
 5. Save it: `python3 -c "import freya,json,sys; print(json.dumps(freya.save_workflow(sys.argv[1], json.load(open(sys.argv[2])))))" <slot> out/<slot>.workflow.json`
    It prints `workflow_id` and `agent_id`. The same slot updates the same workflow. Save once early, as soon as the workflow is valid, and again after every fix.
-6. Test it.
-   - Practice briefs on the kit's tool API: `python3 tools/run_cases.py <agent_id> --brief A` (or `--brief B`).
-   - Your own mock: if it has practice routes and there is a cases file in the case folder or `mock/cases.json`, run `FREYA_BANK_HOST=<mock base without /v1> python3 tools/run_cases.py <agent_id> --cases <file>`.
+6. Test it on the practice customers in `input/` (a JSON list of cases with `id`, `variables`, `script`, `expected`, `checks`).
+   - On the kit's tool API: `python3 tools/run_cases.py <agent_id> --cases input/<cases file>`; add `--brief A` or `--brief B` to run only the cases of the brief you build.
+   - On a mock given in the prompt: `FREYA_BANK_HOST=<mock base URL without /v1> python3 tools/run_cases.py <agent_id> --cases input/<cases file>`.
+   - No cases file: skip the simulation and rely on the chat check below and on the rule-by-rule review.
    - Quick check without a simulation: one or two chat turns (`POST /api/v2/chat/message`, see `docs/api.md`) to see the opening sentence and the first question.
    A run takes 3 to 11 minutes. Run it in the foreground and wait for it to finish. Never start it in the background and never end your turn while a test is running: the builder stops when you stop. Do not start a test that cannot finish before the hard stop.
 7. Read each FAIL line and its reason. Fix the cause in a way that would also be right for a different brief, save again, test again. At most three rounds.

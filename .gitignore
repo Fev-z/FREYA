@@ -11,3 +11,5 @@ __pycache__/
 results/
 out/
 env.example
+runs/
+submission/*.json.bak

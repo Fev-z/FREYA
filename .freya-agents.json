@@ -1,10 +1,16 @@
 {
  "brief-a": {
   "workflow_id": "edc2baec-651a-43cb-abc2-c1596b58d9de",
-  "agent_id": "a6ff6113-d9f6-4ad7-be77-f734b4b8c919"
+  "agent_id": "a6ff6113-d9f6-4ad7-be77-f734b4b8c919",
+  "version": 2
  },
  "brief-b": {
   "workflow_id": "25df1057-8e17-45ad-b6fb-e0ffc20ba429",
-  "agent_id": "92de8f11-2d14-403c-a52f-3d3cc5b899e2"
+  "agent_id": "92de8f11-2d14-403c-a52f-3d3cc5b899e2",
+  "version": 2
+ },
+ "tr-rehearsal": {
+  "workflow_id": "8408b629-c976-4ade-af97-b1600eb2522c",
+  "agent_id": "712e1066-236b-4e2d-9ae8-b7fff1931f25"
  }
 }

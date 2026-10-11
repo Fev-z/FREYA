@@ -50,6 +50,39 @@ def collect_inputs(paths):
     return [f.resolve() for f in files]
 
 
+# What a run may see: the platform docs, the Freya client, the test tools, the skill, the base example.
+# Not the practice briefs, not earlier workflows or generators: a final agent must come from the final documents only.
+KIT_FILES = ["freya.py", "docs/workflow-format.md", "docs/tools-and-code.md", "docs/api.md", "tools/run_cases.py", "tools/score.py",
+             "examples/base-agent.json", ".claude/skills"]
+
+
+def make_workspace(slot, files, stamp):
+    import shutil
+    ws = KIT / "runs" / f"{stamp}-{slot}"
+    for rel in KIT_FILES:
+        src, dst = KIT / rel, ws / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(src, dst) if src.is_dir() else shutil.copy2(src, dst)
+    root = pathlib.Path(os.path.commonpath([f.parent for f in files])) if files else KIT
+    for f in files:                                           # inputs keep their folder layout under input/
+        dst = ws / "input" / f.relative_to(root)
+        dst.parent.mkdir(parents=True, exist_ok=True); shutil.copy2(f, dst)
+    for keep in (".freya-agents.json", ".personas.json"):     # slot -> workflow map (same slot updates in place), test customers made before
+        if (KIT / keep).exists(): shutil.copy2(KIT / keep, ws / keep)
+    (ws / "out").mkdir(exist_ok=True)
+    return ws, sorted(p for p in (ws / "input").rglob("*") if p.is_file())
+
+
+def merge_state_back(ws, slot):
+    src = ws / ".freya-agents.json"
+    if not src.exists(): return
+    got = json.loads(src.read_text()).get(slot)
+    if not got: return
+    dst = KIT / ".freya-agents.json"
+    state = json.loads(dst.read_text()) if dst.exists() else {}
+    state[slot] = got; dst.write_text(json.dumps(state, indent=1))
+
+
 def slot_for(paths):
     p = pathlib.Path(paths[0])
     name = p.name if p.is_dir() else "+".join(pathlib.Path(x).stem for x in paths)
@@ -59,8 +92,7 @@ def slot_for(paths):
 class Trace:
     """Plain-text trace: start and end, each model call (model + one-line purpose), what was created on Freya, tests."""
 
-    def __init__(self, slot):
-        stamp = time.strftime("%Y%m%d-%H%M%S")
+    def __init__(self, slot, stamp):
         (KIT / "traces").mkdir(exist_ok=True)
         self.log = (KIT / "traces" / f"{stamp}-{slot}.log").open("w")
         self.jsonl = (KIT / "traces" / f"{stamp}-{slot}.jsonl").open("w")
@@ -147,19 +179,23 @@ def main():
     if not a.mock and a.inputs[-1].startswith("http"): a.mock = a.inputs.pop()
     files = collect_inputs(a.inputs)
     slot = a.slot or slot_for(a.inputs)
-    trace = Trace(slot)
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    trace = Trace(slot, stamp)
     t0 = time.time()
     trace.line("START", f"slot {slot}, builder model {MODEL}, skill {SKILL}, budget {BUDGET_MIN:.0f} min, mock {a.mock or '(kit tool API)'}")
     for f in files: trace.line("INPUT", str(f.relative_to(KIT)) if f.is_relative_to(KIT) else str(f))
+    ws, docs = make_workspace(slot, files, stamp)
+    trace.line("WORKDIR", f"{ws.relative_to(KIT)} (platform docs, Freya client, test tools, skill and the inputs only)")
 
     deadline = time.strftime("%H:%M", time.localtime(t0 + BUDGET_MIN * 60))
     prompt = (f"Use the {SKILL} skill to build the phone agent.\n\n"
               f"Slot: {slot}  (write out/{slot}.workflow.json and save it with this slot)\n"
               f"Mock base URL for every bank tool call: {a.mock or 'use the server URL in the tool API file'}\n"
-              f"Hard stop at {deadline} local time ({BUDGET_MIN:.0f} minutes from now). Have a saved, working workflow long before that.\n\n"
-              "Documents (read all of them):\n" + "\n".join(f"- {f}" for f in files))
+              f"Hard stop at {deadline} local time ({BUDGET_MIN:.0f} minutes from now). Have a saved, working workflow long before that.\n"
+              "Work only in this folder. Everything about this bank is in input/.\n\n"
+              "Documents (read all of them):\n" + "\n".join(f"- {d.relative_to(ws)}" for d in docs))
     options = ClaudeAgentOptions(
-        cwd=KIT, model=MODEL, skills=[SKILL], setting_sources=["project"],
+        cwd=ws, model=MODEL, skills=[SKILL], setting_sources=["project"],
         allowed_tools=["Read", "Write", "Edit", "Glob", "Grep", "Bash"], permission_mode="dontAsk", max_turns=200,
         # Tests take up to 11 minutes and must run in the foreground: the builder stops when Claude ends its turn.
         env={"BASH_DEFAULT_TIMEOUT_MS": "900000", "BASH_MAX_TIMEOUT_MS": "1200000", "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
@@ -172,6 +208,7 @@ def main():
         trace.line("STOP", f"time budget of {BUDGET_MIN:.0f} min reached, exporting the last saved workflow")
     except Exception as e:
         trace.line("ERROR", f"builder crashed: {type(e).__name__}: {one_line(e, 300)}")
+    merge_state_back(ws, slot)
     try:
         check_and_export(trace, slot, a.mock)
     except Exception as e:
