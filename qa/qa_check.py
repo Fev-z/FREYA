@@ -71,7 +71,12 @@ def checks(wf, trace_text, api_path, base):
     lifecycle = [t for t in (wf.get("tools") or []) if (t.get("config") or {}).get("alwaysRunsAt")]
     add("PASS" if lifecycle else "WARN", "close tool is engine-run (lifecycle) or otherwise guaranteed", f"{len(lifecycle)} lifecycle tool(s)")
     code_nodes = [k for k, n in nodes.items() if n.get("node_type") == "code"]
-    add("PASS" if code_nodes else "WARN", "decisions computed in code nodes", ",".join(code_nodes))
+    hook_writers = [f.get("name") for n in list(nodes.values()) + list(gnodes.values())
+                    for t in (n.get("tools") or []) + (n.get("pre_actions") or [])
+                    for f in [t.get("function", {})]
+                    if "vars[" in (t.get("pre_process_code") or "") + (t.get("post_process_code") or "")]
+    add("PASS" if code_nodes or hook_writers else "WARN", "decisions computed in code nodes or hooks that write variables",
+        ",".join(code_nodes + hook_writers))
     model_writes = [k for k, n in nodes.items() for t in (n.get("tools") or []) if t.get("function", {}).get("name") == "create_promise"]
     add("PASS" if not model_writes else "WARN", "promise write is engine-run after a code check (not a model tool)",
         ("model holds create_promise in: " + ",".join(model_writes)) if model_writes else "")
