@@ -19,6 +19,10 @@ from claude_agent_sdk import (AssistantMessage, ClaudeAgentOptions, ResultMessag
 
 KIT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(KIT))
+# Windows consoles default to a legacy code page: never crash on a character it cannot show (Turkish text, U+FFFD).
+for _stream in (sys.stdout, sys.stderr):
+    try: _stream.reconfigure(errors="replace")
+    except Exception: pass
 import freya
 
 SKILL = os.environ.get("BUILDER_SKILL", "build-phone-agent")
@@ -94,8 +98,8 @@ class Trace:
 
     def __init__(self, slot, stamp):
         (KIT / "traces").mkdir(exist_ok=True)
-        self.log = (KIT / "traces" / f"{stamp}-{slot}.log").open("w")
-        self.jsonl = (KIT / "traces" / f"{stamp}-{slot}.jsonl").open("w")
+        self.log = (KIT / "traces" / f"{stamp}-{slot}.log").open("w", encoding="utf-8")
+        self.jsonl = (KIT / "traces" / f"{stamp}-{slot}.jsonl").open("w", encoding="utf-8")
         self.path = self.log.name
         self.model_calls = 0
 
@@ -200,7 +204,9 @@ def main():
         # Tests take up to 11 minutes and must run in the foreground: the builder stops when Claude ends its turn.
         env={"BASH_DEFAULT_TIMEOUT_MS": "900000", "BASH_MAX_TIMEOUT_MS": "1200000", "CLAUDE_CODE_DISABLE_BACKGROUND_TASKS": "1",
              "PATH": str(pathlib.Path(sys.executable).parent) + os.pathsep + os.environ.get("PATH", ""),
-             "BUILDER_SLOT": slot, "BUILDER_MOCK_URL": a.mock or ""},
+             "BUILDER_SLOT": slot, "BUILDER_MOCK_URL": a.mock or "",
+             # every Python the builder starts (tests, generators) reads and writes UTF-8, also on Windows
+             "PYTHONUTF8": "1", "PYTHONIOENCODING": "utf-8"},
     )
     try:
         asyncio.run(asyncio.wait_for(run_claude(trace, prompt, options), timeout=BUDGET_MIN * 60))
