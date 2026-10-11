@@ -71,6 +71,11 @@ If the account can hold more than one product, keep the per-product state in var
 
 Read `conduct.md` (next to this file) before you write the prompts. The documents always win; `conduct.md` covers what they do not: the priority order for conflicts (safety and law, honesty, the bank's rules, the customer's dignity, the goal, efficiency), the 4-step protocol for never-seen situations (acknowledge, say what you can and cannot do, offer the allowed next step, return or close), interrupts as global nodes with fixed lines (robot, scam, recording, not understood, silence, off-topic, anger, insults, distress, danger to life, legal threats, human request, stop calling, phone handed over, language switch, confused customer), no commitment without a confirmed read-back, no information the documents do not give, and natural Turkish register. Put the short version in `system_prompt`, the interrupts in `global_nodes`, and the decisions in code.
 
+## Spoken values and the universal checklist
+
+- `spoken.py` (next to this file, standard library only) turns spoken Turkish and English into the formats tools need: amounts ("dört yüz elli virgül beş" 450.5, "1.250,50 TL" 1250.5, "bin buçuk" 1500), digit strings given in pieces ("kırk dört yetmiş bir" "4471", leading zeros kept), dates relative to `now` ("haftaya Cuma", "bu Cuma", "ayın on beşi", "yirmi üç Ekim", "15/10", "yarın", "öbür gün", "next Friday") and dates of birth. `spoken.hook_source()` returns it as one self-contained snippet (no `{{`/`}}`): prepend it to a `pre_process_code` hook or a code node to coerce a value the model extracted in words, and to reject a digit string that is still too short. Check its weekday convention against the documents' rule before relying on it.
+- `checklist.md` (next to this file) lists situations any collections call can bring (dates, amounts, numbers in pieces, corrections, conversation traps, tool honesty), each with the handling and the layer that should enforce it. Go through it once while writing the spec and note in the spec where each row is handled.
+
 ## Language
 
 - The agent speaks the language of the brief and the call. If the brief, the example conversations or the call variables are in Turkish, every `on_enter` text, every prompt and every fixed sentence is in Turkish. Sentences the brief gives in quotes are said exactly as given.
