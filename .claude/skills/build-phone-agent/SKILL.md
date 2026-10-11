@@ -67,6 +67,10 @@ The agent's model is shared by every team and is sometimes overloaded. Signs: mo
 If the account can hold more than one product, keep the per-product state in variables written by code, not in the model's memory: the ordered product list, each product's band, deadline, floor and attempts used, which product is being discussed now, and which got a promise, a note or nothing. Let code pick the next product and the outcome/reason of the close call from that state. The prompt only talks about the current product and quotes the values code computed.
 8. Finish with one line: the `workflow_id`, the `agent_id` and how many customers passed in the last run. The builder script exports the workflow after you stop.
 
+## Conduct beyond the documents
+
+Read `conduct.md` (next to this file) before you write the prompts. The documents always win; `conduct.md` covers what they do not: the priority order for conflicts (safety and law, honesty, the bank's rules, the customer's dignity, the goal, efficiency), the 4-step protocol for never-seen situations (acknowledge, say what you can and cannot do, offer the allowed next step, return or close), interrupts as global nodes with fixed lines (robot, scam, recording, not understood, silence, off-topic, anger, insults, distress, danger to life, legal threats, human request, stop calling, phone handed over, language switch, confused customer), no commitment without a confirmed read-back, no information the documents do not give, and natural Turkish register. Put the short version in `system_prompt`, the interrupts in `global_nodes`, and the decisions in code.
+
 ## Language
 
 - The agent speaks the language of the brief and the call. If the brief, the example conversations or the call variables are in Turkish, every `on_enter` text, every prompt and every fixed sentence is in Turkish. Sentences the brief gives in quotes are said exactly as given.
