@@ -1,0 +1,10 @@
+# secrets
+env.sh
+.env
+# local state / outputs
+__pycache__/
+*.pyc
+results/
+.personas.json
+.claude_cwd/
+.localbin/
