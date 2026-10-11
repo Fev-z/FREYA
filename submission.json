@@ -1,8 +1,8 @@
 {
-  "team": "<TAKIM ADI>",
+  "team": "Fevzi & Egemen",
   "members": [
-    { "name": "Egemen <SOYAD>", "email": "egemenayrac@gmail.com" },
-    { "name": "<EKİP ARKADAŞI>", "email": "<E-POSTA>" }
+    { "name": "Egemen AYRAÇ", "email": "egemenayrac@gmail.com" },
+    { "name": "Fevzi Yeniyol", "email": "fevziyeniyoll@gmail.com" }
   ],
   "repo": "https://github.com/egemenayrac/freya-agent-builder",
   "commit": "c887970",
