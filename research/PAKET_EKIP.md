@@ -48,7 +48,7 @@ Repo: https://github.com/Fev-z/FREYA (branch `main`). Bu dosya her şeyin özeti
 
 | Bileşen | Ne yapar | Test |
 |---|---|---|
-| `spoken.py` | TR+EN sözlü tutar ("dört yüz elli virgül beş" → 450.5, "1.250,50 TL" → 1250.5), parça rakam ("kırk dört yetmiş bir" → "4471", baştaki sıfır korunur), tarih ("haftaya Cuma", "ayın on beşi", "yirmi üç Ekim", "15/10", "next Friday"), doğum tarihi ("on dört Mart seksen sekiz" → 1988-03-14). `hook_source()` Freya hook'larına gömülecek bağımsız bir snippet verir (sadece re/datetime, `{{ }}` yok). | `builder/lib/tests/test_spoken.py`: 36/36 |
+| `spoken.py` | TR+EN sözlü tutar ("dört yüz elli virgül beş" → 450.5, "1.250,50 TL" → 1250.5), parça rakam ("kırk dört yetmiş bir" → "4471", baştaki sıfır korunur), tarih ("haftaya Cuma", "ayın on beşi", "yirmi üç Ekim", "15/10", "next Friday"), doğum tarihi ("on dört Mart seksen sekiz" → 1988-03-14). `hook_source()` Freya hook'larına gömülecek bağımsız bir snippet verir (sadece re/datetime, `{{ }}` yok). | `builder/lib/tests/test_spoken.py`: 47/47 ("bin buçuk" = 1500, "ona/o yüzden" sayı sanılmıyor, "on üçü", "ekimde", "cumaya" gibi ekli kelimeler dahil) |
 | `calendar_rules.py` | İş günü, tatil, band başına deadline, "bu/haftaya X", haftanın son iş günü, asgari tutar, callback penceresi, `promise_check`. Hepsi spec ile parametreli; içinde brief değeri yok. | `builder/lib/tests/test_lib.py`: 9/9, PUB tarihleri doğru |
 | `codegen.py` | Freya code node'ları için `date_facts`/ürün başına facts kodu üretir. verify_identity / create_promise / get_account hook'ları (`what_to_do_next`, bir kez retry, dürüstlük). | aynı test dosyası |
 | `wfkit.py` | Geçerli workflow parçaları: api tool'u (URL ve alanlar openapi'den), lifecycle `close_call`, code/api/end node'ları, koşullar, enum extraction. | lint ile |
@@ -73,7 +73,7 @@ Repo: https://github.com/Fev-z/FREYA (branch `main`). Bu dosya her şeyin özeti
 | `research/edge_cases.md` | τ-bench / τ²-bench, Reg F üçüncü kişi kuralları, tarih/sayı normalizasyonu, tool hata benchmark'ları |
 | `research/banking_checkers_injection.md` | Bankacılık edge case'leri (24) ve enjeksiyon noktalarına göre checker'lar; ilk 7 aksiyon |
 | `research/deterministic_layer.md` | Rasa CALM, Parlant, NeMo Guardrails, Duckling desenleri → Freya karşılıkları |
-| `research/transkript_ve_normalizasyon.md` | Açık kaynak transkript/veri setleri, Türkçe konuşma fenomenleri ve normalizasyon kuralları (yazılıyor) |
+| `research/transkript_ve_normalizasyon.md` | Açık kaynak transkript/veri setleri (Türkçe tahsilat transkripti KVKK nedeniyle yok; Duckling TR, MASSIVE tr-TR, Common Voice tr, num2words tr), 40+ Türkçe konuşma fenomeni ve normalizasyon kuralları, 24 ek edge case, MADeN / Credit C-GPT makaleleri, VYŞ arama kuralları (doğrulanmadı) |
 
 ## 6. Açık soru
 

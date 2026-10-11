@@ -41,13 +41,22 @@ def _fold(text):
     return t
 
 
+# Words that look like a number word plus a suffix but are not numbers ("ona" = to him, "yuzden" = because of).
+_NOT_NUMBERS = {"ona", "onu", "onun", "onda", "ondan", "onla", "onlar", "onlara", "onlari", "onlarin", "onlardan",
+                "yuzden", "yuzunden", "yuzune", "birini", "birine", "birisi", "ikimiz"}
+_TR_SUFFIX = re.compile(r"^(i|u|si|su|nci|ncu|inci|uncu|nda|nde|inde|unda|sinde|sunda|e|a|ye|ya|de|da|te|ta|den|dan|"
+                        r"ten|tan|le|la|in|un|nin|nun|lik|luk|er|ar|ser|sar|sine|suna|ine|una|ndan|nden)$")
+
+
 def _strip_suffix(w):
-    """Turkish case/possessive endings on number words: 'on besi', 'yirmisinde', 'onbeşinde' -> stem."""
+    """Turkish case/possessive endings on number, month and weekday words: 'besi', 'yirmisinde', 'ekimde' -> stem."""
     if w in _EN_UNITS or w in _EN_TENS or w in _ORD_EN or w in _TR_UNITS or w in _TR_TENS or w in _SCALES \
             or w in _MONTHS or w in _WEEKDAYS:
         return w
+    if w in _NOT_NUMBERS:
+        return w
     for stem in sorted(list(_TR_UNITS) + list(_TR_TENS) + list(_SCALES) + list(_MONTHS) + list(_WEEKDAYS), key=len, reverse=True):
-        if w.startswith(stem) and len(w) - len(stem) <= 5:
+        if w.startswith(stem) and _TR_SUFFIX.match(w[len(stem):]):
             return stem
     return w
 
@@ -108,17 +117,36 @@ def parse_amount(text):
         except ValueError:
             return None
     toks = [w for w in _tokens(raw) if w not in ("lira", "tl", "kurus", "dollars", "dollar", "euro", "euros", "pounds")]
-    whole, frac, half, mode = [], [], False, "whole"
+    # keep only the longest contiguous run of number words (with its decimal / half markers); noise words split runs
+    runs, cur = [], []
     for w in toks:
+        if _is_num_word(w) or w.isdigit() or w in _DEC or w in _HALF:
+            cur.append(w)
+        elif cur:
+            runs.append(cur)
+            cur = []
+    if cur:
+        runs.append(cur)
+    if not runs:
+        return None
+    best = max(runs, key=lambda r: (sum(1 for w in r if _is_num_word(w) or w.isdigit()), runs.index(r)))
+    whole, frac, half, half_of, mode = [], [], False, None, "whole"
+    for i, w in enumerate(best):
         if w in _DEC:
             mode = "frac"
         elif w in _HALF:
             half = True
+            prev = _strip_suffix(best[i - 1]) if i > 0 else ""
+            if prev in _SCALES and len([x for x in whole if _strip_suffix(x) in _SCALES]) == 1 and \
+                    _strip_suffix(whole[-1]) == prev:
+                half_of = _SCALES[prev]                   # "bin bucuk" = 1500, "iki bin bucuk" = 2500
         elif _is_num_word(w) or w.isdigit():
             (whole if mode == "whole" else frac).append(w)
     v = _words_value(whole) if whole else None
     if v is None:
         return None
+    if half and half_of:
+        return round(float(v + half_of / 2), 2)
     if frac:
         digits = "".join(str(_words_value([f]) or 0) if _strip_suffix(f) in ("sifir", "zero", "oh") else str(_words_value([f]) or "")
                          for f in frac)
