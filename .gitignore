@@ -11,3 +11,4 @@ results/
 .freya-agents.json
 out/
 results_*.log
+out_prev/

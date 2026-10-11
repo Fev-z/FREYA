@@ -111,6 +111,15 @@ def main():
     briefs, api = args[:-1], args[-1]
     slot = pathlib.Path(briefs[-1]).stem
     t0 = time.time()
+    # A run starts from a clean out/ so it depends only on the committed code and the given brief,
+    # exactly like a rebuild from a fresh clone. Earlier runs are kept in out_prev/ (not committed).
+    out = ROOT / "out"
+    if out.exists():
+        import shutil
+        prev = ROOT / "out_prev" / time.strftime("%Y%m%d-%H%M%S")
+        prev.parent.mkdir(exist_ok=True)
+        shutil.move(str(out), str(prev))
+    out.mkdir()
     trace = Trace(slot)
     trace.line(f"start: {time.strftime('%Y-%m-%dT%H:%M:%S%z')}  builder model: {MODEL}  briefs: {briefs}  tool api: {api}  slot: {slot}")
     try:

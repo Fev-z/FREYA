@@ -82,6 +82,8 @@ Check your spec for each line. If the brief has a rule, follow it exactly. If it
 
 ## Deterministic layer (`builder/lib`)
 
+Write the workflow with a small generator script `out/gen_<slot>.py` that reads `out/<slot>.spec.json` and the tool API file, and builds nodes with `builder/lib/wfkit.py` (valid shapes for api tools, lifecycle close_call, code nodes, api_request nodes, end nodes, conditions, enum extraction). Take the tool URL base and every body field/enum from the tool API file with `wfkit.api_base` and `wfkit.api_body_fields`; never type them by hand. The `out/` folder starts empty on every run: write everything for this brief fresh.
+
 Read `builder/lib/spec_schema.md`. Use `builder/lib/codegen.py` to emit the code for the `setup`/`account_facts` code nodes and the post-hooks from your spec, for example:
 
 ```bash
