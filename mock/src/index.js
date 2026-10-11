@@ -13,6 +13,11 @@ const MAX_WRONG = 3;
 
 export default {
   async fetch(request, env) {
+    // The practice routes need the team key. Checked here, where the Worker's secrets are always bound.
+    if (new URL(request.url).pathname.startsWith("/v1/practice/")) {
+      const key = (env.TEAM_KEY || "").trim();
+      if (!key || (request.headers.get("x-team-key") || "").trim() !== key) return json({ ok: false, error: "bad team key" }, 401);
+    }
     const stub = env.BANK.get(env.BANK.idFromName("bank"));
     return stub.fetch(request);
   },
@@ -43,7 +48,6 @@ export class Bank {
     if (path === "" || path === "/v1" || path === "/health") return json({ ok: true, service: "bank mock" });
 
     if (path.startsWith("/v1/practice/")) {
-      if (!this.env.TEAM_KEY || request.headers.get("x-team-key") !== this.env.TEAM_KEY) return json({ ok: false, error: "bad team key" }, 401);
       return this.practice(path.slice("/v1/practice/".length), body);
     }
 
