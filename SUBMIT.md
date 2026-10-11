@@ -7,6 +7,14 @@ kapanış sonucu kodda kuralı, edge case bankaları (`practice/edge-cases/`, `e
 
 Practice ölçümü (13 vaka): bu skill ile düzeltilmiş build 13/13; önceki sürüm 12/13 ×3; 42 EN edge'de 30/42.
 
+## 0. ACIL: vaka klasörünü Drive'dan YENİDEN indir
+Drive'a ilk saat içinde (20:54 TR) `sources/meetings/2026-10-10-follow-up-session-transcript.txt` eklendi. final-2 bunu OKUMADI
+(trace INPUT listesinde sadece 2026-10-07 transkripti var). Bankanın bu transkriptteki kararları:
+- Kesim günü (`now` = hesap kesim günü): önce "Hesap kesim tarihiniz bugün, ekstreniz saat 00.00 itibarıyla kesilecek.", sonra para birimi başına totalDebt (son ekstre borcu değil). **final-2'de yok.**
+- Ekstresi henüz kesilmemiş yeni kart: borç yok + servis veriyorsa "İlk hesap kesim tarihiniz <tarih> olacak."; tarih uydurma. **final-2 tarihi söylemiyor.**
+- Çok kart: teklif öncesi "Başka bir kartınızın borcunu öğrenmek ister misiniz?" (final-2'de var); para birimleri tam adla (final-2'de var).
+Builder'a elle bir şey ekleme: sadece klasörü güncel haliyle indir ve builder'ı ona karşı çalıştır.
+
 ## 1. Çek
 ```bash
 cd ~/Downloads/build-the-builder
