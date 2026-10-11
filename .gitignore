@@ -1,14 +1,27 @@
-# secrets
+# secrets: never commit
 env.sh
 .env
-# local state / outputs
+*.key
+
+# local
+.venv/
 __pycache__/
 *.pyc
+.DS_Store
 results/
-.personas.json
-.claude_cwd/
+out/
+env.example
+runs/
+submission/*.json.bak
+
+# local (ours)
+env.sh
+.env
 .localbin/
 .freya-agents.json
-out/
+.personas.json
+results/
 results_*.log
+out/
 out_prev/
+__pycache__/

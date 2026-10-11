@@ -1,0 +1,1016 @@
+{
+ "workflow_id": "8408b629-c976-4ade-af97-b1600eb2522c",
+ "agent_id": "712e1066-236b-4e2d-9ae8-b7fff1931f25",
+ "updated_at": "2026-10-11T14:53:18.582Z",
+ "workflow": {
+  "nodes": {
+   "end": {
+    "name": "end",
+    "tools": [],
+    "on_enter": {
+     "type": "silent"
+    },
+    "terminal": {
+     "type": "function",
+     "function": {
+      "name": "call_closed",
+      "handler": "__function__:end_call",
+      "parameters": {
+       "type": "object",
+       "properties": {
+        "message_mode": {
+         "type": "string",
+         "default": "none"
+        }
+       }
+      },
+      "description": ""
+     }
+    },
+    "node_type": "end_call",
+    "assertions": [],
+    "passthrough": false,
+    "pre_actions": [],
+    "transitions": [],
+    "role_message": "",
+    "task_message": "",
+    "interruptible": true,
+    "max_node_turns": null,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": false,
+    "disable_inactivity_monitor": true,
+    "passthrough_default_transition": null,
+    "return_to_previous_on_interrupt": false
+   },
+   "setup": {
+    "name": "setup",
+    "tools": [],
+    "on_enter": {
+     "type": "silent"
+    },
+    "node_type": "code",
+    "assertions": [],
+    "passthrough": true,
+    "pre_actions": [
+     {
+      "type": "function",
+      "function": {
+       "name": "code_exec",
+       "handler": "__function__:code_exec",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "code": {
+          "type": "string",
+          "default": "\nimport datetime\ntry:\n    HOL = set(['2026-10-26', '2026-11-11', '2026-11-26', '2026-12-25', '2027-01-01'])\n    GUN = ['Pazartesi', 'Sal\u0131', '\u00c7ar\u015famba', 'Per\u015fembe', 'Cuma', 'Cumartesi', 'Pazar']\n    AY = ['Ocak', '\u015eubat', 'Mart', 'Nisan', 'May\u0131s', 'Haziran', 'Temmuz', 'A\u011fustos', 'Eyl\u00fcl', 'Ekim', 'Kas\u0131m', 'Aral\u0131k']\n    now_s = str(vars.get('now') or '2026-10-14T11:00')\n    today = datetime.date.fromisoformat(now_s[:10])\n    hm = now_s[11:16] if len(now_s) >= 16 else '11:00'\n    def isbd(d):\n        return d.weekday() < 5 and d.isoformat() not in HOL\n    def nbd(d, n):\n        c = 0\n        x = d\n        while c < n:\n            x = x + datetime.timedelta(days=1)\n            if isbd(x):\n                c += 1\n        return x\n    def say(d):\n        return str(d.day) + ' ' + AY[d.month - 1] + ' ' + GUN[d.weekday()]\n    vars['today_iso'] = today.isoformat()\n    vars['today_say'] = say(today)\n    vars['now_time'] = hm\n    t = vars.get('title')\n    vars['hitap'] = str(vars.get('first_name') or '') + (' Han\u0131m' if t == 'Ms' else ' Bey')\n    nb = nbd(today, 1)\n    vars['next_bd_iso'] = nb.isoformat()\n    vars['next_bd_say'] = say(nb)\n    vars['deadline_early'] = nbd(today, 12).isoformat()\n    vars['deadline_late'] = nbd(today, 7).isoformat()\n    # last business day of this week / next week\n    mon = today - datetime.timedelta(days=today.weekday())\n    def last_bd_of_week(m):\n        for k in range(4, -1, -1):\n            x = m + datetime.timedelta(days=k)\n            if isbd(x):\n                return x\n        return None\n    lw = last_bd_of_week(mon)\n    if lw is None or lw <= today:\n        lw = last_bd_of_week(mon + datetime.timedelta(days=7))\n    vars['week_end_bd_iso'] = lw.isoformat()\n    vars['week_end_bd_say'] = say(lw)\n    lines = []\n    for i in range(0, 28):\n        x = today + datetime.timedelta(days=i)\n        wk = 'bu hafta' if x < mon + datetime.timedelta(days=7) else ('haftaya' if x < mon + datetime.timedelta(days=14) else 'iki hafta sonra')\n        tag = 'i\u015f g\u00fcn\u00fc' if isbd(x) else ('TAT\u0130L' if x.isoformat() in HOL else 'hafta sonu')\n        extra = ' (bug\u00fcn)' if i == 0 else (' (yar\u0131n)' if i == 1 else (' (\u00f6b\u00fcr g\u00fcn)' if i == 2 else ''))\n        lines.append(x.isoformat() + ' = ' + say(x) + ' [' + wk + ', ' + tag + ']' + extra)\n    vars['calendar_text'] = '\\n'.join(lines)\n    vars['setup_state'] = 'ok'\nexcept Exception as e:\n    vars['setup_state'] = 'error ' + str(e)\n    vars.setdefault('hitap', str(vars.get('first_name') or ''))\n    vars.setdefault('calendar_text', '')\n"
+         },
+         "timeout_ms": {
+          "type": "number",
+          "default": 10000
+         }
+        }
+       },
+       "description": ""
+      }
+     }
+    ],
+    "transitions": [
+     {
+      "condition": {
+       "mode": "exact",
+       "operator": "always"
+      },
+      "description": "always",
+      "target_node": "identity"
+     }
+    ],
+    "role_message": "",
+    "task_message": "",
+    "interruptible": true,
+    "max_node_turns": null,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": false,
+    "disable_inactivity_monitor": true,
+    "passthrough_default_transition": "identity",
+    "return_to_previous_on_interrupt": false
+   },
+   "identity": {
+    "name": "identity",
+    "tools": [
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "verify_identity",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/verify_identity"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "field",
+           "answer"
+          ],
+          "properties": {
+           "field": {
+            "enum": [
+             "date_of_birth",
+             "phone_last4"
+            ],
+            "type": "string",
+            "default": "{{field}}",
+            "description": "date_of_birth veya phone_last4."
+           },
+           "answer": {
+            "type": "string",
+            "default": "{{answer}}",
+            "description": "date_of_birth i\u00e7in YYYY-MM-DD (kelimeyle s\u00f6ylenen tarihi \u00e7evirin; sadece rakamla s\u00f6ylenen tarih g\u00fcn-ay-y\u0131l s\u0131ras\u0131yla okunur; en son d\u00fczeltme ge\u00e7erlidir). phone_last4 i\u00e7in sadece d\u00f6rt rakam."
+           },
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Bir g\u00fcvenlik cevab\u0131n\u0131 kontrol eder. M\u00fc\u015fteri her cevap verdi\u011finde HEMEN \u00e7a\u011f\u0131r\u0131n. Tek seferde bir alan."
+      },
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if not isinstance(d, dict):\n            d = {}\n            result['data'] = d\n        if d.get('all_verified') is True:\n            d['what_to_do_next'] = 'Kimlik do\u011fruland\u0131. Te\u015fekk\u00fcr edin.'\n        elif d.get('hint') == 'day_month_swapped':\n            d['what_to_do_next'] = 'G\u00fcn ve ay ters s\u00f6ylenmi\u015f olabilir. M\u00fc\u015fteriden do\u011fum tarihini ay\u0131 kelimeyle (\u00f6r. on iki Mart) s\u00f6ylemesini isteyin. Bu yanl\u0131\u015f cevap say\u0131lmaz.'\n        elif d.get('verified') is True:\n            d['what_to_do_next'] = 'Bu cevap do\u011fru. \u015eimdi di\u011fer g\u00fcvenlik sorusunu sorun: dosyadaki telefon numaran\u0131z\u0131n son d\u00f6rt hanesi (do\u011fum tarihi ge\u00e7tiyse) ya da do\u011fum tarihi.'\n        elif d.get('ok') is False and d.get('wrong_answers_left') is None:\n            d['what_to_do_next'] = 'Cevap okunamad\u0131 (yanl\u0131\u015f say\u0131lmaz). Ayn\u0131 soruyu tekrar, net bi\u00e7imde sorun.'\n        else:\n            left = d.get('wrong_answers_left')\n            if isinstance(left, (int, float)) and left <= 0:\n                d['what_to_do_next'] = '\u00dc\u00e7 yanl\u0131\u015f cevap: kontrol bitti. Bor\u00e7tan s\u00f6z etmeyin. Mobil uygulamay\u0131 ya da bir \u015fubeyi kullanmas\u0131n\u0131 s\u00f6yleyin, te\u015fekk\u00fcr edip vedala\u015f\u0131n ve close_call outcome=not_verified reason=failed \u00e7a\u011f\u0131r\u0131n.'\n            else:\n                d['what_to_do_next'] = 'Cevap yanl\u0131\u015f. Ayn\u0131 soruyu bir kez daha sorun. Kalan yanl\u0131\u015f hakk\u0131: ' + str(left) + '.'\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "schedule_callback",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/schedule_callback"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "date",
+           "time"
+          ],
+          "properties": {
+           "date": {
+            "type": "string",
+            "default": "{{date}}",
+            "description": "YYYY-MM-DD"
+           },
+           "time": {
+            "type": "string",
+            "default": "{{time}}",
+            "description": "HH:MM, 24 saat"
+           },
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Geri arama randevusu al\u0131r. Yaln\u0131zca telefonu ba\u015fkas\u0131 a\u00e7t\u0131ysa ve izin verilen aral\u0131kta bir g\u00fcn ve saat s\u00f6ylendiyse \u00e7a\u011f\u0131r\u0131n."
+      },
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and d.get('ok') is True:\n            d['what_to_do_next'] = 'Geri arama kaydedildi. Te\u015fekk\u00fcr edip vedala\u015f\u0131n ve close_call outcome=not_reached reason=callback \u00e7a\u011f\u0131r\u0131n.'\n        else:\n            if not isinstance(d, dict):\n                d = {}\n                result['data'] = d\n            d['what_to_do_next'] = 'Geri arama kaydedilemedi. Bunu s\u00f6yleyin, vedala\u015f\u0131n ve close_call outcome=not_reached reason=no_callback \u00e7a\u011f\u0131r\u0131n.'\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "close_call",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/close_call"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "outcome",
+           "reason"
+          ],
+          "properties": {
+           "reason": {
+            "enum": [
+             "restructuring",
+             "human",
+             "support",
+             "refused",
+             "hardship",
+             "dispute",
+             "service_error",
+             "failed",
+             "declined",
+             "callback",
+             "no_callback",
+             "wrong_number",
+             "deceased",
+             "unclear",
+             "none"
+            ],
+            "type": "string",
+            "default": "{{reason}}",
+            "description": "Sebep kodu. promise ve paid i\u00e7in 'none' g\u00f6nderin."
+           },
+           "outcome": {
+            "enum": [
+             "promise",
+             "paid",
+             "transferred",
+             "no_promise",
+             "not_verified",
+             "not_reached"
+            ],
+            "type": "string",
+            "default": "{{outcome}}",
+            "description": "Sonu\u00e7: promise, paid, transferred, no_promise, not_verified, not_reached."
+           },
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Aramay\u0131 kaydeder. HER araman\u0131n EN SON ara\u00e7 \u00e7a\u011fr\u0131s\u0131d\u0131r, tam bir kez \u00e7a\u011fr\u0131l\u0131r. \u00d6nce m\u00fc\u015fteriye te\u015fekk\u00fcr edip vedala\u015f\u0131n, ayn\u0131 mesajda bu arac\u0131 \u00e7a\u011f\u0131r\u0131n. outcome/reason: promise (reason yok), paid (reason yok), transferred: restructuring|human|support, no_promise: refused|hardship|dispute|service_error, not_verified: failed|declined, not_reached: callback|no_callback|wrong_number|deceased|unclear."
+      },
+      "pre_process_code": "try:\n    b = config.get('body')\n    if isinstance(b, dict) and b.get('outcome') in ('promise', 'paid'):\n        b.pop('reason', None)\nexcept Exception:\n    pass\ntry:\n    b = config.get('body')\n    if isinstance(b, dict) and b.get('reason') in ('none', '', None):\n        b.pop('reason', None)\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and d.get('ok') is True:\n            d['what_to_do_next'] = 'Arama kaydedildi. Ba\u015fka bir \u015fey s\u00f6ylemeyin, ba\u015fka ara\u00e7 \u00e7a\u011f\u0131rmay\u0131n.'\n        else:\n            if not isinstance(d, dict):\n                d = {}\n                result['data'] = d\n            d['what_to_do_next'] = 'Kay\u0131t hatas\u0131; yine de ba\u015fka ara\u00e7 \u00e7a\u011f\u0131rmay\u0131n.'\nexcept Exception:\n    pass\n"
+     }
+    ],
+    "on_enter": {
+     "text": "Merhaba, ben Freya Bank'\u0131n dijital asistan\u0131y\u0131m, bu g\u00f6r\u00fc\u015fme kaydedilmektedir. {{hitap}} ile mi g\u00f6r\u00fc\u015f\u00fcyorum?",
+     "type": "tts"
+    },
+    "node_type": "conversation",
+    "assertions": [],
+    "passthrough": false,
+    "pre_actions": [],
+    "transitions": [
+     {
+      "condition": {
+       "logic": "or",
+       "conditions": [
+        {
+         "mode": "exact",
+         "operand": 0,
+         "operator": "greater_than",
+         "variable": "close_call_success_count"
+        },
+        {
+         "mode": "exact",
+         "operand": 0,
+         "operator": "greater_than",
+         "variable": "close_call_failure_count"
+        }
+       ]
+      },
+      "description": "close_call \u00e7a\u011fr\u0131ld\u0131",
+      "target_node": "end"
+     },
+     {
+      "condition": {
+       "logic": "or",
+       "conditions": [
+        {
+         "mode": "exact",
+         "operand": "true",
+         "operator": "equals",
+         "variable": "verify_identity_response.data.all_verified"
+        },
+        {
+         "mode": "exact",
+         "operand": "True",
+         "operator": "equals",
+         "variable": "verify_identity_response.data.all_verified"
+        }
+       ]
+      },
+      "description": "Kimlik do\u011fruland\u0131",
+      "target_node": "fetch_account"
+     }
+    ],
+    "role_message": "",
+    "task_message": "Bu ad\u0131m: ki\u015fiyi tan\u0131mak ve kimli\u011fi do\u011frulamak. Kimlik do\u011frulanmadan \"tahsilat\", \"bor\u00e7\", \"\u00f6deme\", \"kredi\", \"kart\" kelimelerini ve \u00fcr\u00fcn\u00fc ASLA s\u00f6yleme; kimseye (akrabalar dahil) arama sebebini s\u00f6yleme. Sebep sorulursa g\u00fcvenlik kontrol\u00fcnden sonra anlatabilece\u011fini s\u00f6yle.\n\nA) Ki\u015fi onay\u0131: A\u00e7\u0131l\u0131\u015fta \"{{hitap}} ile mi g\u00f6r\u00fc\u015f\u00fcyorum?\" diye soruldu. Yaln\u0131zca \"evet\", \"benim\", \"buyurun benim\" ya da m\u00fc\u015fterinin kendi ad\u0131 onayd\u0131r. \"Alo\", \"buyurun\", \"kimsiniz\" onay de\u011fildir: (soru sorduysa \u00f6nce tek c\u00fcmleyle cevapla) ve bir kez daha \"{{hitap}} ile mi g\u00f6r\u00fc\u015f\u00fcyorum?\" diye sor. \u0130kinci sorudan sonra da belirsizse te\u015fekk\u00fcr edip vedala\u015f ve close_call outcome=not_reached reason=unclear \u00e7a\u011f\u0131r.\n\nB) Telefonu ba\u015fkas\u0131 a\u00e7t\u0131ysa (m\u00fc\u015fteri de\u011filse): sebebi s\u00f6yleme. M\u00fc\u015fteriye ne zaman ula\u015f\u0131labilece\u011fini sor.\n  - Geri arama yaln\u0131zca BUG\u00dcN ({{today_iso}}, saat {{now_time}}'dan sonra) ya da bir sonraki i\u015f g\u00fcn\u00fc {{next_bd_say}} ({{next_bd_iso}}), 10:00 ile 19:00 aras\u0131nda (ikisi dahil) olabilir. Uygunsa schedule_callback'i tarih ve saatle \u00e7a\u011f\u0131r, sonra vedala\u015f\u0131p close_call outcome=not_reached reason=callback.\n  - S\u00f6ylenen g\u00fcn/saat aral\u0131k d\u0131\u015f\u0131ndaysa bir kez ba\u015fka bir zaman iste (izin verilen g\u00fcn\u00fc ve saatleri s\u00f6yle). O da d\u0131\u015f\u0131ndaysa randevu alma; vedala\u015f, close_call outcome=not_reached reason=no_callback.\n  - Numara m\u00fc\u015fteriye ait de\u011filse: \u00f6z\u00fcr dile, vedala\u015f, close_call outcome=not_reached reason=wrong_number.\n  - M\u00fc\u015fteri vefat etmi\u015fse: yaln\u0131zca \"Ba\u015f\u0131n\u0131z sa\u011f olsun.\" de, ba\u015fka bir \u015fey sorma, close_call outcome=not_reached reason=deceased.\n  - Yak\u0131n ki\u015fi \u00f6deme teklif etse ya da sorular\u0131 cevaplamak istese bile hesap hakk\u0131nda hi\u00e7bir \u015fey s\u00f6yleme, g\u00fcvenlik sorusu sorma.\n\nC) Kimlik (m\u00fc\u015fteri onay verdikten sonra): sorular\u0131 tek tek sor. \u00d6nce do\u011fum tarihi, sonra dosyadaki telefon numaras\u0131n\u0131n son d\u00f6rt hanesi. Her cevapta HEMEN verify_identity \u00e7a\u011f\u0131r (do\u011fum tarihi YYYY-AA-GG; sadece rakamla s\u00f6ylenirse g\u00fcn, ay, y\u0131l s\u0131ras\u0131; par\u00e7a par\u00e7a s\u00f6ylenirse birle\u015ftir; son d\u00fczeltme ge\u00e7erli). Ara\u00e7 sonucundaki what_to_do_next'e uy.\n  - Yanl\u0131\u015f cevap tekrar sorulur; toplam \u00fc\u00e7 yanl\u0131\u015f kontrol\u00fc bitirir: borcu s\u00f6yleme, mobil uygulamay\u0131 ya da bir \u015fubeyi kullanmas\u0131n\u0131 s\u00f6yle, vedala\u015f, close_call outcome=not_verified reason=failed.\n  - Cevap vermek istemezse ya da cevap yerine araman\u0131n ne hakk\u0131nda oldu\u011funu sorarsa: sorular\u0131n hesab\u0131n\u0131 korumak i\u00e7in oldu\u011funu B\u0130R kez a\u00e7\u0131kla ve soruyu tekrar sor. \u0130kinci ret ya da ikinci b\u00f6yle soru: vedala\u015f, close_call outcome=not_verified reason=declined.\n  - Konu\u015fmak istemedi\u011fini iki kez s\u00f6ylerse: close_call outcome=not_verified reason=declined.\n  - \u0130nsanla g\u00f6r\u00fc\u015fmek isterse: \u00f6nce bir kez kendinin yard\u0131mc\u0131 olup olamayaca\u011f\u0131n\u0131 sor; do\u011frulamadan sonra devam edece\u011finizi s\u00f6yle.",
+    "interruptible": true,
+    "max_node_turns": 40,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": true,
+    "disable_inactivity_monitor": false,
+    "passthrough_default_transition": null,
+    "return_to_previous_on_interrupt": false
+   },
+   "negotiate": {
+    "name": "negotiate",
+    "tools": [
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "create_promise",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/create_promise"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "amount",
+           "date"
+          ],
+          "properties": {
+           "date": {
+            "type": "string",
+            "default": "{{date}}",
+            "description": "YYYY-MM-DD, tarih tablosundan."
+           },
+           "amount": {
+            "type": "number",
+            "default": "{{amount}}",
+            "description": "T\u00fcrk liras\u0131 tutar, say\u0131 (\u00f6r. 637.5)."
+           },
+           "product_id": {
+            "type": "string",
+            "default": "{{product_id}}"
+           },
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "\u00d6deme s\u00f6z\u00fcn\u00fc kaydeder. YALNIZCA \u00fcr\u00fcn, tutar ve tarihi okuyup 'Onayl\u0131yor musunuz?' sorusuna net bir evet ald\u0131ktan sonra \u00e7a\u011f\u0131r\u0131n."
+      },
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and d.get('ok') is True:\n            vars['promise_saved'] = 'yes'\n            d['what_to_do_next'] = 'S\u00f6z kaydedildi. \u015eu c\u00fcmleyi aynen s\u00f6yleyin: \"Bu s\u00f6z\u00fc onaylayan bir k\u0131sa mesaj alacaks\u0131n\u0131z.\" Sonra te\u015fekk\u00fcr edip vedala\u015f\u0131n ve close_call outcome=promise reason=none \u00e7a\u011f\u0131r\u0131n.'\n        else:\n            n = int(vars.get('promise_fail') or 0) + 1\n            vars['promise_fail'] = str(n)\n            if not isinstance(d, dict):\n                d = {}\n                result['data'] = d\n            if n < 2:\n                d['what_to_do_next'] = 'Kay\u0131t ba\u015far\u0131s\u0131z. create_promise arac\u0131n\u0131 ayn\u0131 de\u011ferlerle bir kez daha HEMEN \u00e7a\u011f\u0131r\u0131n. S\u00f6z kaydedildi demeyin.'\n            else:\n                d['what_to_do_next'] = 'Kay\u0131t yine ba\u015far\u0131s\u0131z. M\u00fc\u015fteriye s\u00f6z\u00fc kaydedemedi\u011finizi s\u00f6yleyin, te\u015fekk\u00fcr edip vedala\u015f\u0131n ve close_call outcome=no_promise reason=service_error \u00e7a\u011f\u0131r\u0131n.'\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "transfer_to_agent",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/transfer_to_agent"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "queue"
+          ],
+          "properties": {
+           "queue": {
+            "enum": [
+             "restructuring",
+             "general",
+             "support"
+            ],
+            "type": "string",
+            "default": "{{queue}}",
+            "description": "restructuring, general veya support."
+           },
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Aramay\u0131 bir insana aktar\u0131r. restructuring: yeni \u00f6deme plan\u0131 / daha d\u00fc\u015f\u00fck taksit talebi. general: m\u00fc\u015fteri \u0131srarla insanla g\u00f6r\u00fc\u015fmek istiyor. support: hastal\u0131k, vefat, i\u015f kayb\u0131 ya\u015fayan m\u00fc\u015fteri destek ekibine ba\u011flanmay\u0131 kabul etti."
+      },
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and d.get('ok') is True:\n            d['what_to_do_next'] = 'Aktarma yap\u0131ld\u0131. M\u00fc\u015fteriye aktar\u0131ld\u0131\u011f\u0131n\u0131 s\u00f6yleyip vedala\u015f\u0131n ve close_call outcome=transferred reason=<kuyru\u011fa g\u00f6re: restructuring|human (general i\u00e7in)|support> \u00e7a\u011f\u0131r\u0131n.'\n        else:\n            if not isinstance(d, dict):\n                d = {}\n                result['data'] = d\n            d['what_to_do_next'] = 'Aktarma yap\u0131lamad\u0131. Bunu s\u00f6yleyin, vedala\u015f\u0131n ve close_call \u00e7a\u011f\u0131r\u0131n.'\nexcept Exception:\n    pass\n"
+     },
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 0
+      },
+      "function": {
+       "name": "close_call",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/close_call"
+         },
+         "body": {
+          "type": "object",
+          "required": [
+           "outcome",
+           "reason"
+          ],
+          "properties": {
+           "reason": {
+            "enum": [
+             "restructuring",
+             "human",
+             "support",
+             "refused",
+             "hardship",
+             "dispute",
+             "service_error",
+             "failed",
+             "declined",
+             "callback",
+             "no_callback",
+             "wrong_number",
+             "deceased",
+             "unclear",
+             "none"
+            ],
+            "type": "string",
+            "default": "{{reason}}",
+            "description": "Sebep kodu. promise ve paid i\u00e7in 'none' g\u00f6nderin."
+           },
+           "outcome": {
+            "enum": [
+             "promise",
+             "paid",
+             "transferred",
+             "no_promise",
+             "not_verified",
+             "not_reached"
+            ],
+            "type": "string",
+            "default": "{{outcome}}",
+            "description": "Sonu\u00e7: promise, paid, transferred, no_promise, not_verified, not_reached."
+           },
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Aramay\u0131 kaydeder. HER araman\u0131n EN SON ara\u00e7 \u00e7a\u011fr\u0131s\u0131d\u0131r, tam bir kez \u00e7a\u011fr\u0131l\u0131r. \u00d6nce m\u00fc\u015fteriye te\u015fekk\u00fcr edip vedala\u015f\u0131n, ayn\u0131 mesajda bu arac\u0131 \u00e7a\u011f\u0131r\u0131n. outcome/reason: promise (reason yok), paid (reason yok), transferred: restructuring|human|support, no_promise: refused|hardship|dispute|service_error, not_verified: failed|declined, not_reached: callback|no_callback|wrong_number|deceased|unclear."
+      },
+      "pre_process_code": "try:\n    b = config.get('body')\n    if isinstance(b, dict) and b.get('outcome') in ('promise', 'paid'):\n        b.pop('reason', None)\nexcept Exception:\n    pass\ntry:\n    b = config.get('body')\n    if isinstance(b, dict) and b.get('reason') in ('none', '', None):\n        b.pop('reason', None)\nexcept Exception:\n    pass\n",
+      "post_process_code": "try:\n    if isinstance(result, dict):\n        result.pop('header', None)\n        d = result.get('data')\n        if isinstance(d, dict) and d.get('ok') is True:\n            d['what_to_do_next'] = 'Arama kaydedildi. Ba\u015fka bir \u015fey s\u00f6ylemeyin, ba\u015fka ara\u00e7 \u00e7a\u011f\u0131rmay\u0131n.'\n        else:\n            if not isinstance(d, dict):\n                d = {}\n                result['data'] = d\n            d['what_to_do_next'] = 'Kay\u0131t hatas\u0131; yine de ba\u015fka ara\u00e7 \u00e7a\u011f\u0131rmay\u0131n.'\nexcept Exception:\n    pass\n"
+     }
+    ],
+    "on_enter": {
+     "type": "llm"
+    },
+    "node_type": "conversation",
+    "assertions": [],
+    "passthrough": false,
+    "pre_actions": [],
+    "transitions": [
+     {
+      "condition": {
+       "logic": "or",
+       "conditions": [
+        {
+         "mode": "exact",
+         "operand": 0,
+         "operator": "greater_than",
+         "variable": "close_call_success_count"
+        },
+        {
+         "mode": "exact",
+         "operand": 0,
+         "operator": "greater_than",
+         "variable": "close_call_failure_count"
+        }
+       ]
+      },
+      "description": "close_call \u00e7a\u011fr\u0131ld\u0131",
+      "target_node": "end"
+     }
+    ],
+    "role_message": "",
+    "task_message": "M\u00fc\u015fterinin kimli\u011fi do\u011fruland\u0131. Hesap bilgileri (ara\u00e7tan, hesaplanm\u0131\u015f):\n- \u00dcr\u00fcn: {{product_say}} (product_id {{product_id}})\n- Gecikmi\u015f tutar (tam tutar): {{past_due}} TL, gecikme: {{days_late}} g\u00fcn, bant: {{band}}\n- Alt s\u0131n\u0131r: {{floor_amt}} TL\n- SON TAR\u0130H: {{deadline_say}} ({{deadline_iso}}). Bundan sonraki hi\u00e7bir tarih kaydedilemez.\n- Bu haftan\u0131n son i\u015f g\u00fcn\u00fc (1. deneme \u00f6nerisi): {{week_end_bd_say}} ({{week_end_bd_iso}})\n- {{attempt_text}}\n\nTakvim (bug\u00fcnden itibaren; yaln\u0131zca 'i\u015f g\u00fcn\u00fc' olan ve son tarihten sonra olmayan g\u00fcnler kaydedilebilir):\n{{calendar_text}}\n\nAk\u0131\u015f:\n1. Tahsilat ekibinden gecikmi\u015f bir \u00f6deme i\u00e7in arad\u0131\u011f\u0131n\u0131 s\u00f6yle: \u00fcr\u00fcn\u00fc ({{product_say}}), gecikmi\u015f tutar\u0131 ve ka\u00e7 g\u00fcn gecikti\u011fini s\u00f6yle. Tam tutar\u0131 iste ve \u015funu sor: \"Bu \u00f6demeyi bug\u00fcn yapabilir misiniz?\" Asla \"ne kadar \u00f6deyebilirsiniz?\" diye sorma; her tutar\u0131 sen \u00f6nerirsin.\n2. Tarih kurallar\u0131: s\u00f6z tarihi bug\u00fcn ya da sonras\u0131, i\u015f g\u00fcn\u00fc ve son tarihten sonra olmamal\u0131. \"Haftaya <g\u00fcn>\" = takvimde [haftaya] etiketli o g\u00fcn; \"bu <g\u00fcn>\" = [bu hafta] etiketli o g\u00fcn. Hafta sonu/tatil g\u00fcn\u00fc (son tarihten \u00f6nce) s\u00f6ylenirse bir sonraki i\u015f g\u00fcn\u00fcn\u00fc \u00f6ner. Belirsiz d\u00f6nem (\"haftaya\", \"ay sonu\", \"maa\u015f\u0131m yat\u0131nca\") s\u00f6ylenirse bir kez kesin g\u00fcn\u00fc sor; yine s\u00f6ylemezse son tarihi \u00f6ner. Son tarihten sonraki bir tarih istenirse kaydedebilece\u011fin en ge\u00e7 tarihin {{deadline_say}} oldu\u011funu s\u00f6yle ve onu \u00f6ner; m\u00fc\u015fteri bunu reddederse kesin ret say\u0131l\u0131r.\n3. Tutar kurallar\u0131: m\u00fc\u015fteri tam tutar\u0131n fazla oldu\u011funu s\u00f6ylerse alt s\u0131n\u0131r\u0131 ({{floor_amt}} TL) bir kez \u00f6ner ve kalan\u0131n gecikmede kalaca\u011f\u0131n\u0131 s\u00f6yle. M\u00fc\u015fteri {{floor_amt}} ile {{past_due}} aras\u0131nda (ikisi dahil) bir tutar s\u00f6ylerse kabul et. Alt s\u0131n\u0131r\u0131n alt\u0131ndaysa kaydedilemeyece\u011fini s\u00f6yle ve alt s\u0131n\u0131r\u0131 bir kez \u00f6ner. Alt s\u0131n\u0131r\u0131 reddederse kesin ret.\n4. M\u00fc\u015fterinin \u00f6nerdi\u011fi bir tarih ya da tutar asla ret de\u011fildir; kurallara g\u00f6re ele al.\n5. Kesin ret (ya da tarih/tutar vermeden \"bug\u00fcn olmaz\") bir ikna denemesi harcar. 1. deneme: tutar\u0131 (tam tutar; m\u00fc\u015fteri fazla oldu\u011funu s\u00f6ylediyse alt s\u0131n\u0131r) {{week_end_bd_say}} tarihinde \u00f6ner. 2. deneme yaln\u0131zca ge\u00e7 bantta: {{floor_amt}} TL'yi {{deadline_say}} tarihinde \u00f6ner. Denemeler bitince dur, reddedilen teklifi tekrarlama, vedala\u015f, close_call outcome=no_promise reason=refused.\n6. Hastal\u0131k, ailede vefat ya da i\u015f kayb\u0131: k\u0131sa bir c\u00fcmleyle \u00fcz\u00fcnt\u00fcn\u00fc belirt, ikna denemesi yapma, destek ekibine ba\u011flanmay\u0131 \u00f6ner. Kabul ederse transfer_to_agent queue=support, sonra close_call outcome=transferred reason=support. Reddederse close_call outcome=no_promise reason=hardship. M\u00fc\u015fteri yine de kendisi tarih/tutar s\u00f6ylerse s\u00f6z\u00fc kurallara g\u00f6re kaydet.\n7. \"Zaten \u00f6dedim\" (bu gecikmi\u015f tutar): \u00f6demelerin g\u00f6r\u00fcnmesinin bir i\u015f g\u00fcn\u00fc s\u00fcrebilece\u011fini s\u00f6yle, s\u00f6z alma, close_call outcome=paid reason=none.\n8. \"Bu bor\u00e7 benim de\u011fil\", \"b\u00f6yle bir \u00fcr\u00fcn\u00fcm olmad\u0131\", \"o \u00fcr\u00fcn kapand\u0131/\u00f6dendi\": tart\u0131\u015fma, s\u00f6z alma, close_call outcome=no_promise reason=dispute.\n9. Yeni \u00f6deme plan\u0131 / daha d\u00fc\u015f\u00fck taksit talebi: plan anlatma, transfer_to_agent queue=restructuring, close_call outcome=transferred reason=restructuring.\n10. \u0130nsanla g\u00f6r\u00fc\u015fme talebi: \u00f6nce bir kez yard\u0131mc\u0131 olup olamayaca\u011f\u0131n\u0131 sor; \u0131srar ederse transfer_to_agent queue=general, close_call outcome=transferred reason=human.\n11. Konu\u015fmak istemedi\u011fini iki kez s\u00f6ylerse: close_call outcome=no_promise reason=refused.\n12. Onay: tarih ve tutar kurallara uyunca \u00fcr\u00fcn\u00fc, tutar\u0131 ve tarihi kelimelerle oku ve \"Onayl\u0131yor musunuz?\" diye sor. Yaln\u0131zca net bir evetten sonra create_promise \u00e7a\u011f\u0131r (amount say\u0131, date YYYY-MM-DD, takvimden). M\u00fc\u015fteri bu ad\u0131mda tarih/tutar\u0131 de\u011fi\u015ftirirse yeniden kontrol et ve yeniden oku.\n13. S\u00f6z\u00fcn kaydedildi\u011fini yaln\u0131zca create_promise ok:true d\u00f6nd\u00fckten sonra s\u00f6yle. Sonra aynen: \"Bu s\u00f6z\u00fc onaylayan bir k\u0131sa mesaj alacaks\u0131n\u0131z.\" Ard\u0131ndan te\u015fekk\u00fcr et, vedala\u015f, close_call outcome=promise reason=none. Ba\u015far\u0131s\u0131zsa bir kez daha dene; yine ba\u015far\u0131s\u0131zsa kaydedemedi\u011fini s\u00f6yle ve close_call outcome=no_promise reason=service_error.\n14. Kaydedilmi\u015f s\u00f6z bu aramada de\u011fi\u015ftirilemez/iptal edilemez; m\u00fc\u015fteri isterse mobil uygulamadan de\u011fi\u015ftirebilece\u011fini s\u00f6yle.",
+    "interruptible": true,
+    "max_node_turns": 60,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": true,
+    "disable_inactivity_monitor": false,
+    "passthrough_default_transition": null,
+    "return_to_previous_on_interrupt": false
+   },
+   "fetch_account": {
+    "name": "fetch_account",
+    "tools": [],
+    "on_enter": {
+     "type": "silent"
+    },
+    "node_type": "api_request",
+    "assertions": [],
+    "passthrough": true,
+    "pre_actions": [
+     {
+      "type": "function",
+      "config": {
+       "timeoutMs": 12000,
+       "maxRetries": 2
+      },
+      "function": {
+       "name": "get_account",
+       "handler": "__function__:api_call",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "url": {
+          "type": "string",
+          "default": "https://freya-bank-mock.freyavoice.workers.dev/v1/get_account"
+         },
+         "body": {
+          "type": "object",
+          "required": [],
+          "properties": {
+           "customer_id": {
+            "type": "string",
+            "default": "{{customer_id}}"
+           }
+          }
+         },
+         "method": {
+          "type": "string",
+          "default": "POST"
+         },
+         "headers": {
+          "type": "object",
+          "properties": {
+           "Content-Type": {
+            "type": "string",
+            "default": "application/json"
+           }
+          }
+         }
+        }
+       },
+       "description": "Hesap bilgisi."
+      }
+     }
+    ],
+    "transitions": [
+     {
+      "condition": {
+       "mode": "exact",
+       "operator": "always"
+      },
+      "description": "always",
+      "target_node": "compute_account"
+     }
+    ],
+    "role_message": "",
+    "task_message": "",
+    "interruptible": true,
+    "max_node_turns": null,
+    "response_mapping": [
+     {
+      "path": "data.products",
+      "variable": "products",
+      "description": ""
+     }
+    ],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": false,
+    "disable_inactivity_monitor": true,
+    "passthrough_default_transition": "compute_account",
+    "return_to_previous_on_interrupt": false
+   },
+   "compute_account": {
+    "name": "compute_account",
+    "tools": [],
+    "on_enter": {
+     "type": "silent"
+    },
+    "node_type": "code",
+    "assertions": [],
+    "passthrough": true,
+    "pre_actions": [
+     {
+      "type": "function",
+      "function": {
+       "name": "code_exec",
+       "handler": "__function__:code_exec",
+       "parameters": {
+        "type": "object",
+        "properties": {
+         "code": {
+          "type": "string",
+          "default": "\nimport json\nimport datetime\ntry:\n    prods = vars.get('products')\n    if isinstance(prods, str):\n        try:\n            prods = json.loads(prods)\n        except Exception:\n            prods = None\n    p = None\n    if isinstance(prods, list) and prods:\n        p = prods[0]\n    if not isinstance(p, dict):\n        p = {}\n        def g(k):\n            return vars.get('get_account_response.data.products.0.' + k) or vars.get('fetch_account_response.data.products.0.' + k)\n        for k in ['product_id', 'type', 'card_last4', 'past_due', 'days_late', 'minimum_payment', 'instalment_amount']:\n            v = g(k)\n            if v is not None:\n                p[k] = v\n    typ = str(p.get('type') or '')\n    vars['product_id'] = str(p.get('product_id') or 'p1')\n    if typ == 'credit_card':\n        vars['product_say'] = str(p.get('card_last4') or '') + ' ile biten kredi kart\u0131n\u0131z'\n        floor = p.get('minimum_payment')\n    elif typ == 'car_loan':\n        vars['product_say'] = 'ta\u015f\u0131t krediniz'\n        floor = p.get('instalment_amount')\n    else:\n        vars['product_say'] = 'ihtiya\u00e7 krediniz'\n        floor = p.get('instalment_amount')\n    def num(x):\n        try:\n            return float(x)\n        except Exception:\n            return 0.0\n    pd = num(p.get('past_due'))\n    fl = num(floor)\n    dl = int(num(p.get('days_late')))\n    def fmt(x):\n        s = ('%.2f' % x)\n        if s.endswith('.00'):\n            s = s[:-3]\n        return s\n    vars['past_due'] = fmt(pd)\n    vars['floor_amt'] = fmt(fl)\n    vars['days_late'] = str(dl)\n    if dl <= 7:\n        vars['band'] = 'erken'\n        vars['deadline_iso'] = str(vars.get('deadline_early'))\n        vars['attempts_allowed'] = '1'\n        vars['attempt_text'] = 'Bu m\u00fc\u015fteri ERKEN bantta: yaln\u0131zca 1 ikna denemesi var (bu haftan\u0131n son i\u015f g\u00fcn\u00fc \u00f6nerisi). 2. deneme YOK.'\n    else:\n        vars['band'] = 'ge\u00e7'\n        vars['deadline_iso'] = str(vars.get('deadline_late'))\n        vars['attempts_allowed'] = '2'\n        vars['attempt_text'] = 'Bu m\u00fc\u015fteri GE\u00c7 bantta: 2 ikna denemesi var. 1. deneme: bu haftan\u0131n son i\u015f g\u00fcn\u00fc. 2. deneme: alt s\u0131n\u0131r tutar\u0131 (' + fmt(fl) + ' TL) son tarihte (' + str(vars.get('deadline_late')) + ').'\n    AY = ['Ocak', '\u015eubat', 'Mart', 'Nisan', 'May\u0131s', 'Haziran', 'Temmuz', 'A\u011fustos', 'Eyl\u00fcl', 'Ekim', 'Kas\u0131m', 'Aral\u0131k']\n    GUN = ['Pazartesi', 'Sal\u0131', '\u00c7ar\u015famba', 'Per\u015fembe', 'Cuma', 'Cumartesi', 'Pazar']\n    d = datetime.date.fromisoformat(vars['deadline_iso'][:10])\n    vars['deadline_say'] = str(d.day) + ' ' + AY[d.month - 1] + ' ' + GUN[d.weekday()]\n    vars['account_state'] = 'ok' if p.get('past_due') is not None else 'missing'\nexcept Exception as e:\n    vars['account_state'] = 'error ' + str(e)\n    for k in ['product_say', 'past_due', 'floor_amt', 'days_late', 'deadline_iso', 'deadline_say', 'attempt_text', 'band', 'product_id']:\n        vars.setdefault(k, '')\n"
+         },
+         "timeout_ms": {
+          "type": "number",
+          "default": 10000
+         }
+        }
+       },
+       "description": ""
+      }
+     }
+    ],
+    "transitions": [
+     {
+      "condition": {
+       "mode": "exact",
+       "operator": "always"
+      },
+      "description": "always",
+      "target_node": "negotiate"
+     }
+    ],
+    "role_message": "",
+    "task_message": "",
+    "interruptible": true,
+    "max_node_turns": null,
+    "response_mapping": [],
+    "extraction_schema": [],
+    "max_turn_transition": null,
+    "truncation_strategy": "keep_all",
+    "suppress_tool_results": false,
+    "truncation_window_size": 10,
+    "on_enter_first_entry_only": false,
+    "disable_inactivity_monitor": true,
+    "passthrough_default_transition": "negotiate",
+    "return_to_previous_on_interrupt": false
+   }
+  },
+  "agent_config": {
+   "llmConfig": {
+    "model": "experimental-5",
+    "tools": [
+     {
+      "type": "function",
+      "function": {
+       "name": "end_call",
+       "handler": "__function__:end_call",
+       "parameters": {
+        "type": "object",
+        "properties": {}
+       },
+       "description": "This is used to technically terminate the call after all the customer's questions have been answered and necessary information has been provided.\n- It should only be triggered SILENTLY in the background after the customer-related workflow is complete; never mention this tool or its name to the customer."
+      }
+     }
+    ],
+    "apiKey": null,
+    "baseUrl": null,
+    "provider": "experimental-5",
+    "maxTokens": 1000,
+    "clientType": null,
+    "temperature": 0.7,
+    "firstMessage": "Selam! Sana nas\u0131l yard\u0131mc\u0131 olabilirim?",
+    "systemPrompt": "You are a helpful assistant. Your role is to help users with their tasks. Always be friendly and professional. You can use `end_call` tool after you say goodbye to customer to hang up if call about to finish.",
+    "firstMessageMode": "assistant-speaks-first",
+    "additionalSettings": {},
+    "disableInterruptionsDuringFirstMessage": true
+   },
+   "sttConfig": {
+    "model": "freya-stt",
+    "apiKey": null,
+    "baseUrl": null,
+    "language": "tr",
+    "provider": "Freya",
+    "confidenceReask": {
+     "enabled": false,
+     "reaskMode": "phrase",
+     "reduction": "min",
+     "threshold": 0.3,
+     "reaskPhrases": null,
+     "disableOnDigitNodes": true,
+     "maxConsecutiveReasks": 2
+    },
+    "additionalSettings": {
+     "diarize": false,
+     "punctuate": true,
+     "streaming": true,
+     "aicEnabled": false,
+     "krispEnabled": false,
+     "smartTurnEnabled": true
+    }
+   },
+   "ttsConfig": {
+    "model": "freya-tts",
+    "apiKey": null,
+    "baseUrl": null,
+    "voiceId": "leyla",
+    "language": "tr",
+    "provider": "Freya",
+    "stopSpeakingPlan": {
+     "voiceSeconds": 0.1,
+     "numberOfWords": 2,
+     "backOffSeconds": 0.4,
+     "interruptionPhrases": [
+      "dur",
+      "bekle",
+      "bir dakika",
+      "bir saniye",
+      "dursana",
+      "bekle bi",
+      "anlamad\u0131m",
+      "ne diyon",
+      "ne diyorsun",
+      "ne dedin",
+      "yeter"
+     ],
+     "acknowledgementPhrases": [
+      "h\u0131",
+      "evet",
+      "tamam",
+      "aynen",
+      "okey",
+      "okay",
+      "anlad\u0131m",
+      "hee",
+      "ee",
+      "eee",
+      "\u0131\u0131",
+      "\u0131\u0131\u0131",
+      "ha",
+      "h\u0131-h\u0131",
+      "ha-ha",
+      "tabi",
+      "tabii",
+      "peki",
+      "tamamd\u0131r",
+      "h\u0131 h\u0131",
+      "h\u0131m",
+      "h\u0131mm",
+      "h\u0131h\u0131",
+      "haha",
+      "he",
+      "hahaha"
+     ]
+    },
+    "startSpeakingPlan": {
+     "waitSeconds": 0.5,
+     "backgroundNoisePhrases": [
+      "arka plan sesi",
+      "klavye sesi",
+      "klavye sesleri",
+      "\u00f6ks\u00fcr\u00fck",
+      "\u00f6ks\u00fcr\u00fck sesi",
+      "video sesi",
+      "video kayd\u0131",
+      "\u00e7\u0131lg\u0131n ses",
+      "\u00e7\u0131lg\u0131n kahkaha",
+      "g\u00fcl\u00fc\u015f",
+      "ses ses ses",
+      "\u00e7\u0131k \u00e7\u0131k \u00e7\u0131k",
+      "sim",
+      "sim izle"
+     ]
+    },
+    "textSubstitutions": [
+     {
+      "pattern": "@",
+      "replacement": "at"
+     },
+     {
+      "pattern": "\\$",
+      "replacement": "dollars"
+     },
+     {
+      "pattern": "%",
+      "replacement": "percent"
+     },
+     {
+      "pattern": "&",
+      "replacement": "and"
+     },
+     {
+      "pattern": "\\+",
+      "replacement": "plus"
+     },
+     {
+      "pattern": "turkishairlines",
+      "replacement": "turkish airlines",
+      "caseInsensitive": true
+     }
+    ],
+    "additionalSettings": {
+     "speed": 1,
+     "stability": 0.5,
+     "similarity_boost": 0.75
+    },
+    "speechNormalization": {
+     "urls": true,
+     "names": false,
+     "emails": true,
+     "emojis": true,
+     "phoneNumbers": false,
+     "generalNumbers": false,
+     "identityNumbers": false
+    }
+   },
+   "dtmfConfig": {
+    "prefix": "DTMF: ",
+    "enabled": false,
+    "timeout": 2,
+    "terminationDigit": "#"
+   },
+   "syncSource": null,
+   "privacyConfig": {
+    "enableRecording": true,
+    "getRecordingConsent": false,
+    "recordingConsentText": null
+   },
+   "complianceConfig": {
+    "soc2": false,
+    "pciDss": false,
+    "euAiAct": false,
+    "mifidIi": false
+   },
+   "routingLlmConfig": null,
+   "backgroundSoundUrl": null,
+   "piiRedactionConfig": {
+    "enabled": false,
+    "maskIban": true,
+    "maskEmail": true,
+    "maskPhone": true,
+    "customRules": [],
+    "maskNationalId": true,
+    "maskPaymentCard": true
+   },
+   "voicemailDetection": {
+    "enabled": false,
+    "messageMode": "none",
+    "staticMessage": null,
+    "voicemailResponseDelay": 2
+   },
+   "callTimeoutSettings": {
+    "maxRetries": 2,
+    "dynamicWait": null,
+    "checkInMessage": null,
+    "closureMessage": null,
+    "silenceTimeout": 10,
+    "maximumDuration": 600,
+    "maxDurationEndCall": {
+     "llmPrompt": null,
+     "messageMode": "llm",
+     "interruptible": false,
+     "spokenMessage": null,
+     "triggerTimeout": null
+    },
+    "silenceTimeoutPrompt": null
+   },
+   "extractionLlmConfig": null,
+   "postConversationAnalysis": {
+    "analysisModel": null,
+    "summaryPrompt": null,
+    "autoDetectProblems": false,
+    "problemDetectionPrompt": null,
+    "problemDetectionInstructions": null
+   }
+  },
+  "global_nodes": {},
+  "initial_node": "setup",
+  "system_prompt": "Sen Freya Bank'\u0131n dijital asistan\u0131s\u0131n. Arama ba\u015ftan sona T\u00dcRK\u00c7E yap\u0131l\u0131r. Her mesajda bir ya da iki k\u0131sa c\u00fcmle s\u00f6yle, tek seferde tek soru sor.\nGenel kurallar:\n- M\u00fc\u015fteriye \"{{hitap}}\" diye hitap et.\n- Bug\u00fcn: {{today_say}} ({{today_iso}}), saat {{now_time}}. Ger\u00e7ek saati de\u011fil bunu kullan.\n- Robot / yapay zek\u00e2 m\u0131s\u0131n sorusu: \"Freya Bank'\u0131n dijital asistan\u0131y\u0131m.\" de ve kald\u0131\u011f\u0131n yerden devam et.\n- \"Bu doland\u0131r\u0131c\u0131l\u0131k m\u0131?\": aramay\u0131 Freya Bank m\u00fc\u015fteri hizmetleri numaras\u0131n\u0131 arayarak do\u011frulayabilece\u011fini s\u00f6yle ve devam et.\n- M\u00fc\u015fterinin soru sormas\u0131 ret ya da cevap de\u011fildir: tek c\u00fcmleyle cevapla ve sorunu tekrar sor.\n- Ara\u00e7lardan bilmedi\u011fin bir \u015fey sorulursa bu bilgiye sahip olmad\u0131\u011f\u0131n\u0131 s\u00f6yle. Rakam, tarih, sebep uydurma.\n- Asla indirim, bor\u00e7 silme, taksit plan\u0131 ya da ba\u015fka bir ko\u015ful \u00f6nerme.\n- Tarihleri ve tutarlar\u0131 m\u00fc\u015fteriye kelimelerle, insan gibi s\u00f6yle (\u00f6r. \"on alt\u0131 Ekim Cuma\", \"alt\u0131 y\u00fcz otuz yedi bu\u00e7uk lira\"); ISO bi\u00e7imi s\u00f6yleme.\n- Bir kural ara\u00e7 \u00e7a\u011f\u0131rmay\u0131 s\u00f6yl\u00fcyorsa arac\u0131 GER\u00c7EKTEN \u00e7a\u011f\u0131r. Her ara\u00e7 sonucundan sonra ya m\u00fc\u015fteriyle konu\u015f ya da sonraki arac\u0131 \u00e7a\u011f\u0131r; ara\u00e7 sonucundaki what_to_do_next talimat\u0131na uy.\n- Her arama tam olarak bir close_call ile biter ve close_call son ara\u00e7 \u00e7a\u011fr\u0131s\u0131d\u0131r. close_call'dan \u00f6nce te\u015fekk\u00fcr edip vedala\u015f (ayn\u0131 mesajda close_call'\u0131 \u00e7a\u011f\u0131r).",
+  "test_variables": {
+   "now": "2026-10-14T11:00",
+   "title": "Mr",
+   "last_name": "Reyes",
+   "first_name": "Daniel",
+   "customer_id": "c_test"
+  }
+ }
+}
