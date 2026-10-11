@@ -66,6 +66,20 @@ Rules that make it reliable (each one comes from the platform docs or from faile
 - **test_variables**: plausible values for every call variable of the brief (for the chat smoke test), including `now`.
 - Write `task_message` as instructions for that step only. Never mention node names or routing in prompts. In nodes without tools, say no tool call is allowed.
 
+## Situations a hidden brief or customer can bring (map each to the brief's rule, or to a safe default)
+
+Check your spec for each line. If the brief has a rule, follow it exactly. If it has none, use the safe default and note it in `ambiguities`.
+
+- Identity answers of other kinds: postcode (keep letters, spaces and leading zeros as the customer says them, normalise case), year of birth (four digits; "eighty-eight" is 1988 only if the brief allows two-digit years, else ask for all four), company number or founded year (digits as strings, keep leading zeros). Convert words to digits. Never send a partial value. Never read identity data back to the caller and never ask for card numbers, PINs or passwords.
+- Business customers: the person on the line may be staff or a representative. Who may answer and what may be disclosed comes from the brief; if it says nothing, treat anyone who is not the named contact as a third party.
+- Phone handed to someone else mid-call, or the customer says "I'm his wife" after confirming: treat the new speaker as a third party for anything not yet disclosed.
+- "Stop calling me", a lawyer or a complaint: no persuasion; the brief's refusal or human-transfer rule decides the outcome.
+- "I'm paying right now / I will pay in the app today": that is a promise for today if the brief records promises for today; "I already paid" is the paid rule. Do not mix them.
+- A verified customer asking for a callback instead of talking now: follow the brief's callback/refusal rule; never schedule outside its window.
+- Partial amount offers: apply the floor rules exactly; amounts and dates come back from the customer as words, pieces or corrections.
+- Questions back ("why do you need that?", "which account?"): answer per the brief without disclosing anything before identity, then repeat the pending question.
+- Off-topic talk: one short sentence, then return to the pending question. A date mentioned as small talk is never a payment date unless the customer offers it for payment.
+
 ## Deterministic layer (`builder/lib`)
 
 Read `builder/lib/spec_schema.md`. Use `builder/lib/codegen.py` to emit the code for the `setup`/`account_facts` code nodes and the post-hooks from your spec, for example:

@@ -161,7 +161,64 @@ def lint(wf, api):
                 out.append(("ERROR", f"{where} code_exec: Python syntax error: {e}"))
     if close_calls == 0:
         out.append(("ERROR", "no close_call tool anywhere: every call must end with exactly one close_call"))
+    elif close_calls > 1:
+        out.append(("WARN", f"{close_calls} close_call tools: make sure only one can ever run in a call"))
+
+    # transitions that test an extracted enum must use one of its values
+    for key, n in {**nodes, **gnodes}.items():
+        enums = {e["name"]: set(map(str, e.get("enum_values", []))) for e in (n.get("extraction_schema") or []) if e.get("enum_values")}
+        for tr in n.get("transitions", []) or []:
+            for c in _leaf_conditions(tr.get("condition") or {}):
+                v, op = c.get("variable"), c.get("operator")
+                if v in enums and op in ("equals", "not_equals") and str(c.get("operand")) not in enums[v]:
+                    out.append(("ERROR", f"node {key}: transition tests {v} == {c.get('operand')!r}, not one of its enum values {sorted(enums[v])}"))
+
+    # every {{var}} used in a prompt or fixed line should be set by something
+    known = set((wf.get("test_variables") or {}).keys())
+    for n in {**nodes, **gnodes}.values():
+        known |= {e["name"] for e in (n.get("extraction_schema") or [])}
+        known |= {m["variable"] for m in (n.get("response_mapping") or [])}
+        for _, t in [(None, x) for x in (n.get("tools") or []) + (n.get("pre_actions") or [])]:
+            known |= {m["variable"] for m in (t.get("response_mapping") or [])}
+    blob = json.dumps(wf)
+    known |= set(re.findall(r"vars\[\\?['\"](\w+)\\?['\"]\]\s*=", blob))
+    # code that builds names dynamically (v[k + 'floor']): accept any quoted literal used in code as a name or suffix
+    code_literals = set()
+    for _, t in tool_list(wf):
+        props = ((t.get("function") or {}).get("parameters") or {}).get("properties", {})
+        code = (props.get("code") or {}).get("default", "") + t.get("pre_process_code", "") + t.get("post_process_code", "")
+        code_literals |= set(re.findall(r"['\"](\w{3,})['\"]", code))
+    known |= {v for v in code_literals}
+    for key, n in {**nodes, **gnodes}.items():
+        texts = [n.get("task_message") or "", n.get("loop_prompt") or "", (n.get("on_enter") or {}).get("text") or ""]
+        for txt in texts:
+            for var in re.findall(r"\{\{\s*([\w.\-]+)(?::json)?\s*\}\}", txt):
+                root = var.split(".")[0]
+                if root in ("system", "call", "date", "time", "extractor") or root.endswith("_response") or root.endswith("_args") or "." in var and root in known:
+                    continue
+                if root not in known and not any(root.endswith(s) for s in code_literals):
+                    out.append(("WARN", f"node {key}: prompt uses {{{{{var}}}}} but nothing visibly sets it (the model would see the literal placeholder)"))
+
+    # nothing about the debt in the very first fixed line
+    first = nodes.get(wf.get("initial_node"), {})
+    seen_first, k = set(), wf.get("initial_node")
+    while first and first.get("node_type") != "conversation" and k not in seen_first:   # skip leading code/api nodes
+        seen_first.add(k)
+        k = first.get("passthrough_default_transition") or ((first.get("transitions") or [{}])[-1].get("target_node"))
+        first = nodes.get(k, {})
+    opening = ((first.get("on_enter") or {}).get("text") or "").lower()
+    leak = [w for w in ("collection", "debt", "overdue", "past due", "payment", "owe", "arrears") if w in opening]
+    if leak:
+        out.append(("WARN", f"opening line mentions {leak}: most briefs forbid this before identity is verified"))
     return out
+
+
+def _leaf_conditions(c):
+    if "conditions" in c:
+        for sub in c["conditions"]:
+            yield from _leaf_conditions(sub)
+    elif c:
+        yield c
 
 
 def main():
