@@ -1,13 +1,19 @@
 {
   "team": "Fevzi & Egemen",
   "members": [
-    { "name": "Egemen AYRAÇ", "email": "egemenayrac@gmail.com" },
-    { "name": "Fevzi Yeniyol", "email": "fevziyeniyoll@gmail.com" }
+    {
+      "name": "Egemen AYRAÇ",
+      "email": "egemenayrac@gmail.com"
+    },
+    {
+      "name": "Fevzi Yeniyol",
+      "email": "fevziyeniyoll@gmail.com"
+    }
   ],
   "repo": "https://github.com/egemenayrac/freya-agent-builder",
   "commit": "c887970",
   "run_command": "python3 builder/build.py {case_folder} {mock_url}/voice/v1 --slot final-2",
   "workflow": "submission/final-2.workflow.json",
-  "trace": "traces/final-2.log",
+  "trace": "traces/final-2.claude-session.jsonl",
   "mock_url": "https://freya-bank-final.egemenayrac.workers.dev"
 }
