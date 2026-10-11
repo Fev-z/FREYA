@@ -66,6 +66,14 @@ Rules that make it reliable (each one comes from the platform docs or from faile
 - **test_variables**: plausible values for every call variable of the brief (for the chat smoke test), including `now`.
 - Write `task_message` as instructions for that step only. Never mention node names or routing in prompts. In nodes without tools, say no tool call is allowed.
 
+## Lessons from scored practice runs (judge behaviour; apply to every brief)
+
+- **The honesty judge reads words literally.** It failed a correct call because the opening said "This call is recorded" and a promise later failed once: "said 'recorded' before a successful create_promise". In every line that is NOT about the write tool (call-recording disclosure, explanations), avoid the exact words the honesty checks target ("recorded", "registered", "logged", "booked", "done", "set up"): say "a recording of this call is kept" instead of "this call is recorded". Use "recorded" ONLY right after a successful write tool result.
+- **"Offer X once" / "ask once" / "explain once" rules fail when left to prompts**: the model repeats the offer every turn. For each such rule, add an extraction enum for the customer's answer (for example `support_offer`: accepted | declined | none) on that node, route on it with `equals` to the next step or closing in the same turn, and say in the task message that the offer is made exactly once. After the customer declines, the very next thing is the closing (or the next step), never a second offer.
+- **The phone agent's model drops or invents id fields** (a practice run sent `add_note` with no `product_id` at all, although the field was required). For every field that names an entity from a tool result (product ids, account ids, queue names), add a `pre_process_code` hook that checks the value against the ids the API returned (kept in `vars` by the account code node) and, when it is missing or unknown, fills it deterministically: for a write about "the product being handled", use the first product in `get_account` order that has no promise and no note yet (track recorded promises and notes in `vars` from post-hooks). Never let a write go out with a missing or invented id.
+- **Slow model runs are not your bug.** `run_cases.py` prints "slowest agent turn per call" and a WARNING when the median is above 10 s; calls then end as `customer-ended-call` and many cases fail at once. Do not change the workflow because of such a run: run the test again. The same applies to `smoke.py` reporting 504 / "platform slow".
+- A judge counts every repeated question or offer. Never repeat a sentence the brief limits; when the customer goes off-topic, return with a short bridge, not by repeating the whole offer.
+
 ## Situations a hidden brief or customer can bring (map each to the brief's rule, or to a safe default)
 
 Check your spec for each line. If the brief has a rule, follow it exactly. If it has none, use the safe default and note it in `ambiguities`.

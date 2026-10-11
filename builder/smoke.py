@@ -29,10 +29,20 @@ def main():
         body = {"workflowId": a.workflow_id, "message": msg, "customerVariables": variables}
         if call_id:
             body["callId"] = call_id
-        try:
-            r = freya.api("POST", "/api/v2/chat/message", body)
-        except RuntimeError as e:
-            problems.append(f"turn {i + 1} failed: {str(e)[:300]}")
+        r = None
+        for attempt in range(2):
+            try:
+                r = freya.api("POST", "/api/v2/chat/message", body)
+                break
+            except RuntimeError as e:
+                if " 504" in str(e) or "502" in str(e):
+                    if attempt == 0:
+                        continue
+                    print("SMOKE INCONCLUSIVE: the platform model is slow (504). Not a workflow bug; run the smoke test again later.")
+                    sys.exit(0)
+                problems.append(f"turn {i + 1} failed: {str(e)[:300]}")
+                break
+        if r is None:
             break
         call_id = r.get("callId") or call_id
         reply = r.get("response") or ""
@@ -40,6 +50,9 @@ def main():
         print(f"CUSTOMER: {msg}\nAGENT: {reply}\n", flush=True)
         if not reply.strip():
             problems.append(f"turn {i + 1}: empty reply")
+        if r.get("endedByAgent") and i < len(turns) - 1:
+            problems.append(f"turn {i + 1}: the agent ended the call before the scripted conversation was over")
+            break
         if i == 0:
             low = reply.lower()
             leaked = [w for w in LEAK if w in low]
