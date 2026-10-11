@@ -17,3 +17,92 @@
 2026-10-11T19:02:27+0300  MODEL    claude-opus-5-5 | Bash: Read tool API and test cases
 2026-10-11T19:02:29+0300  MODEL    claude-opus-5-5 | Bash: Read format docs and example
 2026-10-11T19:02:29+0300  TEST     - A routing instruction inside `task_message` has no effect on routing. Routing reads only transitions.
+2026-10-11T19:02:31+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:02:31+0300  MODEL    claude-opus-5-5 | Bash: Show sizes and example workflow
+2026-10-11T19:02:34+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:02:34+0300  MODEL    claude-opus-5-5 | Reading the bank documents is done; now I'm checking the platform docs for hooks and code nodes, then I'll write the workflow.
+2026-10-11T19:02:35+0300  MODEL    claude-opus-5-5 | Bash: List doc section headings
+2026-10-11T19:02:37+0300  MODEL    claude-opus-5-5 | Bash: Read tools-and-code key sections
+2026-10-11T19:02:37+0300  TEST     - **Use `default` for fixed backend config** such as `url`, `method` and auth headers. At registration the engine moves every `default` into the tool's base config, resolves `{{var}}` from the variable table, and removes the field from the 
+2026-10-11T19:02:37+0300  TEST     - Declare each body field as a leaf under `body.properties.<field>`.
+2026-10-11T19:02:37+0300  TEST     - Use an `enum` on the leaf, and list the values in the `description` as well.
+2026-10-11T19:02:37+0300  TEST     - For a tool in `tools`: inside the tool object, next to `function` and `config`.
+2026-10-11T19:02:37+0300  TEST     - **Start the path at the envelope, with `data.`**. If the API returns `{"ok": true}`, map `data.ok`. If it returns `{"products": [...]}`, map `data.products`. Verified in a working builder, on a tool-level mapping and on a node-level mappi
+2026-10-11T19:02:37+0300  TEST     - On a passthrough node, end with an `always` transition so that a failed or empty response does not deadlock.
+2026-10-11T19:02:37+0300  TEST     - It retries only failures to establish the connection: connection refused, or reset during the TCP or TLS handshake. The request never reached the server, so a repeat is safe even for POST.
+2026-10-11T19:02:37+0300  TEST     - The post-hook runs before `response_mapping` and extraction see the result.
+2026-10-11T19:02:37+0300  TEST     - For an `api_call`, `result` is the envelope described above: a dict with `status`, `data`, `message`, `status_code` and `header`. The API's JSON body is `result["data"]`.
+2026-10-11T19:02:37+0300  TEST     - The snippet gets a dict named `vars`. It holds the current workflow variables.
+2026-10-11T19:02:37+0300  TEST     - Call variables are in `vars`. The builder reads `vars.get("now")`, a call variable passed with the simulation.
+2026-10-11T19:02:37+0300  TEST     - **Do not write `{{` or `}}` in the code.** The internal sources disagree on whether the `code` field is templated. One says it is exempt. Another says placeholders are resolved when the code runs and an unset one is left as literal text, 
+2026-10-11T19:02:37+0300  TEST     - A workflow-level tool without `alwaysRunsAt` never runs and the model never sees it.
+2026-10-11T19:02:37+0300  TEST     - **The agent says nothing after the tool call.** The result arrives, no assistant message follows, and the simulated customer hangs up after waiting. It happens more often when the result is bare data such as `{"ok": true, "verified": true
+2026-10-11T19:02:37+0300  TEST     - Fixed values use `default`, never `const`.
+2026-10-11T19:02:42+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:02:43+0300  MODEL    claude-opus-5-5 | Bash: Read workflow format essentials
+2026-10-11T19:02:43+0300  TEST     - Write instructions for the model, not a script.
+2026-10-11T19:02:43+0300  TEST     - User and assistant messages are kept.
+2026-10-11T19:02:43+0300  TEST     - Prefer a string value such as `verified` or `rejected`, written by your code or by the API.
+2026-10-11T19:02:43+0300  TEST     - Transitions are checked in list order. Put specific conditions first and broad ones last.
+2026-10-11T19:02:43+0300  TEST     - **The farewell comes from the terminal, not from `on_enter`.** A node with an `on_enter` line and `message_mode: "none"` hangs up silently. Put the sentence in `spoken_message` and set `on_enter` to `{"type": "silent"}`.
+2026-10-11T19:02:43+0300  TEST     - Truncation applies to the dialogue model only. Extraction and routing run before it.
+2026-10-11T19:02:43+0300  TEST     - Use `snake_case` node keys that describe the step.
+2026-10-11T19:03:13+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:03:13+0300  MODEL    claude-opus-5-5 | Writing the workflow generator now (time is short, so the spec will be compact).
+2026-10-11T19:03:14+0300  MODEL    claude-opus-5-5 | Bash: Create output dirs, show time
+2026-10-11T19:03:16+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:04:57+0300  MODEL    claude-opus-5-5 | Write: {'file_path': '/Users/macintosh/Downloads/build-the-builder/runs/20261011-190219
+2026-10-11T19:04:59+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:05:03+0300  MODEL    claude-opus-5-5 | Bash: Build workflow and test setup code locally
+2026-10-11T19:05:06+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:05:06+0300  MODEL    claude-opus-5-5 | Dates check out (late deadline 23 Oct, holiday 26 Oct moves to 27 Oct). Compiling hooks and saving.
+2026-10-11T19:05:10+0300  MODEL    claude-opus-5-5 | Bash: Check hooks then save workflow
+2026-10-11T19:05:10+0300  FREYA    saving workflow: python3 -c " import json;wf=json.load(open('out/tr-rehearsal.workflow.json')) for n in wf['nodes'].values(): for t in n.get('tools',[]): for k in ('post_process_code','pre_process_code'): if k in t: c
+2026-10-11T19:05:13+0300  FREYA    saved: {"workflow_id": "8408b629-c976-4ade-af97-b1600eb2522c", "agent_id": "712e1066-236b-4e2d-9ae8-b7fff1931f25", "version": 3}
+2026-10-11T19:05:15+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:05:15+0300  MODEL    claude-opus-5-5 | Saved. Running the 10 practice customers against the mock now.
+2026-10-11T19:05:16+0300  MODEL    claude-opus-5-5 | Bash: Run practice cases against mock
+2026-10-11T19:05:16+0300  TEST     started: date && FREYA_BANK_HOST=https://freya-bank-mock-team.egemenayrac.workers.dev python3 tools/run_cases.py 712e1066-236b-4e2d-9ae8-b7fff1931f25 --cases input/test-musterileri.json 2>&1 | tail -40; date
+2026-10-11T19:07:43+0300  TEST     PASS PUB-01 easy Happy path | verify > verify > get_account > promise > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-02 medium Third party | schedule_callback > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-03 medium Identity | verify > verify > verify > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-04 medium Dates | verify > verify > get_account > promise > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-05 medium Hardship | verify > verify > get_account > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-06 hard Amounts | verify > verify > get_account > promise > close_call
+2026-10-11T19:07:43+0300  TEST     FAIL PUB-07 hard Dates | verify > verify > get_account > promise > close_call
+2026-10-11T19:07:43+0300  TEST     - promises [('p1', 540.0, '2026-10-26')], expected [('p1', 540.0, '2026-10-27')]
+2026-10-11T19:07:43+0300  TEST     - conversation: The agent failed to meet the majority of the success criteria. While the agent did ask for the exact day in [Message 8], it accepted the user's offer of October 26th in [Message 10] instead of rejecting it and offering the n
+2026-10-11T19:07:43+0300  TEST     PASS PUB-08 medium Already paid | verify > verify > get_account > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-09 medium Restructuring | verify > verify > get_account > transfer_to_agent > close_call
+2026-10-11T19:07:43+0300  TEST     PASS PUB-10 hard Tool failure | verify > verify > get_account > promise > promise > close_call
+2026-10-11T19:07:43+0300  TEST     slowest agent turn per call: median 7 s, worst 14 s. Failed calls where the customer hung up: 0.
+2026-10-11T19:07:43+0300  TEST     9 / 10 passed (bank records and conversation checks). Last simulation 40866a46-9060-4fc6-ad00-18d18eb49bbf, status completed, 135 s.
+2026-10-11T19:07:58+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:07:58+0300  MODEL    claude-opus-5-5 | 9/10 on the first run. Saving that as the tested copy, then fixing PUB-07 (agent accepted the 26 Oct holiday) with a code guard before `create_promise` rather t
+2026-10-11T19:08:00+0300  MODEL    claude-opus-5-5 | Bash: Save tested copy, locate edit points
+2026-10-11T19:08:14+0300  MODEL    claude-opus-5-5 | Bash: Add promise rule-check guard to generator
+2026-10-11T19:08:20+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:08:26+0300  MODEL    claude-opus-5-5 | Bash: Rebuild and test guard locally
+2026-10-11T19:08:29+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:08:33+0300  MODEL    claude-opus-5-5 | Bash: Rebuild, save, rerun all cases
+2026-10-11T19:08:33+0300  TEST     started: python3 - <<'EOF' p='gen/build.py'; s=open(p).read() s=s.replace("- Belirsiz dönem (\"haftaya\"","- Müşteri bir gün söylediğinde, cevap vermeden ÖNCE o günün tablo satırını bul. Satırda \"iş günü deği
+2026-10-11T19:10:16+0300  FREYA    saved: {"workflow_id": "8408b629-c976-4ade-af97-b1600eb2522c", "agent_id": "712e1066-236b-4e2d-9ae8-b7fff1931f25", "version": 4}
+2026-10-11T19:10:16+0300  TEST     PASS PUB-01 easy Happy path | verify > verify > get_account > promise > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-02 medium Third party | schedule_callback > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-03 medium Identity | verify > verify > verify > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-04 medium Dates | verify > verify > get_account > promise > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-05 medium Hardship | verify > verify > get_account > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-06 hard Amounts | verify > verify > get_account > promise > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-07 hard Dates | verify > verify > get_account > promise > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-08 medium Already paid | verify > verify > get_account > close_call
+2026-10-11T19:10:16+0300  TEST     PASS PUB-09 medium Restructuring | verify > verify > get_account > transfer_to_agent > close_call
+2026-10-11T19:10:16+0300  TEST     FAIL PUB-10 hard Tool failure | verify > verify > get_account > promise > close_call
+2026-10-11T19:10:16+0300  TEST     - outcome ('no_promise', 'service_error'), expected ('promise', None)
+2026-10-11T19:10:16+0300  TEST     - promises [], expected [('p1', 365.0, '2026-10-16')]
+2026-10-11T19:10:16+0300  TEST     - conversation: The criterion requiring exactly one promise in the ledger after the retry was not met. System events show that the 'create_promise' tool call failed with a service error and no retry was attempted, leaving the ledger with ze
+2026-10-11T19:10:16+0300  TEST     slowest agent turn per call: median 3 s, worst 8 s. Failed calls where the customer hung up: 0.
+2026-10-11T19:10:16+0300  TEST     9 / 10 passed (bank records and conversation checks). Last simulation 7416db84-ee23-4846-b78a-39d6f30f8379, status completed, 93 s.
+2026-10-11T19:10:24+0300  MODEL    claude-opus-5-5 | 
+2026-10-11T19:10:24+0300  MODEL    claude-opus-5-5 | 9/10 again: PUB-07 is fixed, but PUB-10 didn't retry this time. I'm making the retry rule hold even when the hook's counter isn't seen.
+2026-10-11T19:10:31+0300  MODEL    claude-opus-5-5 | Bash: Strengthen retry rule, save, rerun all
+2026-10-11T19:10:31+0300  TEST     started: python3 - <<'EOF' p='gen/build.py'; s=open(p).read() old=""" if n <= 1:""" new=""" if n <= 1 or str(vars.get('promise_attempted_twice') or '') != 'yes' and n <= 2 and False:""" s=s.replace("""'Söz yin
