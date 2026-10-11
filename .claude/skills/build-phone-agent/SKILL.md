@@ -8,6 +8,7 @@ description: Build a Freya phone agent from a bank's brief, test it on the pract
 Work in the folder you were started in; the bank's documents are in `input/`. Use only what the documents you were given say. Do not copy rules, values or names from another brief, from the practice briefs or from memory. Everything the agent knows about this bank comes from these documents.
 
 The prompt gives you: the documents, a **slot**, a **mock base URL** (or none: then use the server URL in the tool API file) and a **hard stop time**. Have a saved, working workflow well before the hard stop. A saved agent that handles most cases beats a better one that was not saved in time.
+Pace: reading takes about 4 minutes, writing a full workflow with its code about 6 to 8, one test run 3 to 11. That fits the budget with room for two fix rounds, so do not shrink the design (fewer steps, no code checks, no global interrupt nodes) because of the clock unless fewer than 10 minutes are left. A practice build that cut its design at minute 3 to "save time" scored 0 of 13.
 
 ## Steps
 
