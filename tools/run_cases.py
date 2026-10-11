@@ -32,6 +32,11 @@ STYLES = {
     "in_words": "HOW YOU TALK: you say every amount and every date in words and never in digits, like 'four hundred and fifty-five' and 'the twenty-second of October'. Postcodes, years and other codes you say digit by digit.",
 }
 
+# A case with "language": "tr" gets a customer who speaks only that language. The facts stay the same.
+LANGUAGES = {
+    "tr": "LANGUAGE: you speak only Turkish, the whole call, even if the caller uses another language. Say dates and amounts the way a Turkish speaker does on the phone, like '14 Mart 1988', 'on altı Ekim Cuma', 'dört yüz yirmi lira'. When the caller reads something back and it matches what you agreed, say \"Evet, onaylıyorum.\" When the caller says goodbye, say \"Teşekkürler, iyi günler.\" and say nothing more.",
+}
+
 def persona_for(case, ident, style=None):
     v, i = case["variables"], ident["identity"]
     me = f"{v['first_name']} {v['last_name']}"
@@ -43,7 +48,7 @@ def persona_for(case, ident, style=None):
                "company_number": "Your company number is {}.", "founded_year": "The company was founded in {}."}
         who = f"You are {me}. " + " ".join(say.get(k, "Your " + k.replace("_", " ") + " is {}.").format(x) for k, x in i.items()) + " Give these only when asked, and give the wrong ones where the text below says so."
     style = style or case.get("style")
-    text = PERSONA.format(who=who, script=case["script"]) + ("\n\n" + STYLES[style] if style else "")
+    text = PERSONA.format(who=who, script=case["script"]) + ("\n\n" + STYLES[style] if style else "") + ("\n\n" + LANGUAGES[case["language"]] if case.get("language") in LANGUAGES else "")
     return {"name": case["id"] + " " + case["title"] + (f" [{style}]" if style else ""), "prompt": text, "successCriteria": "All of these are true:\n- " + "\n- ".join(case["checks"]), "tags": ["hackathon", "brief-" + case["brief"]]}
 
 def main():
