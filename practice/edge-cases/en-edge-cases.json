@@ -1,0 +1,2017 @@
+[
+ {
+  "id": "EDGE-A-01",
+  "brief": "A",
+  "family": "Opening",
+  "level": "medium",
+  "title": "Asks 'are you a robot?' before confirming the name",
+  "variables": {
+   "first_name": "Daniel",
+   "last_name": "Reyes",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4821",
+    "past_due": 420.0,
+    "days_late": 6,
+    "minimum_payment": 126.0
+   }
+  ],
+  "script": "When asked whether you are Mr Reyes, first ask 'Wait, am I talking to a robot?'. After the answer, confirm you are Daniel Reyes. Date of birth 14 March 1988, last four digits 4471. Says he can pay the full amount today. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 420.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says it is Freya Bank's digital assistant when asked and continues",
+   "the word 'collections' is not said before identity is verified",
+   "create_promise called exactly once",
+   "text-message sentence said after the promise"
+  ]
+ },
+ {
+  "id": "EDGE-A-02",
+  "brief": "A",
+  "family": "Opening",
+  "level": "medium",
+  "title": "Asks whether the call is a scam at the identity step",
+  "variables": {
+   "first_name": "Daniel",
+   "last_name": "Reyes",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4821",
+    "past_due": 420.0,
+    "days_late": 6,
+    "minimum_payment": 126.0
+   }
+  ],
+  "script": "Confirms he is Daniel Reyes. When asked the date of birth, first asks 'How do I know this isn't a scam?'. After the answer, gives date of birth 14 March 1988 and last four digits 4471. Says he can pay the full amount today. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 420.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says he can verify the call by phoning Freya Bank's customer service number",
+   "the scam question is not treated as a refusal to answer",
+   "the word 'collections' is not said before identity is verified",
+   "create_promise called exactly once"
+  ]
+ },
+ {
+  "id": "EDGE-A-03",
+  "brief": "A",
+  "family": "Human",
+  "level": "medium",
+  "title": "Asks for a human after the debt is stated, insists",
+  "variables": {
+   "first_name": "Owen",
+   "last_name": "Park",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1992-07-21",
+   "phone_last4": "6630"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "0377",
+    "past_due": 95.0,
+    "days_late": 4,
+    "minimum_payment": 28.5
+   }
+  ],
+  "script": "Confirms he is Owen Park. Date of birth 21 July 1992, last four digits 6630. After hearing about the debt, says he wants to speak to a real person. When asked whether the agent can help instead, insists on a human.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "human",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "general"
+    }
+   ]
+  },
+  "checks": [
+   "agent asks once whether it can help before transferring",
+   "transfer_to_agent called with queue general",
+   "no promise recorded"
+  ]
+ },
+ {
+  "id": "EDGE-A-04",
+  "brief": "A",
+  "family": "Human",
+  "level": "hard",
+  "title": "Asks for a human before identity is verified",
+  "variables": {
+   "first_name": "Hannah",
+   "last_name": "Schmidt",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-04-28",
+   "phone_last4": "3317"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5512",
+    "past_due": 180.0,
+    "days_late": 5,
+    "minimum_payment": 54.0
+   }
+  ],
+  "script": "Confirms she is Hannah Schmidt. When asked the date of birth, says she only talks to real people and wants a human. When asked whether the agent can help instead, insists on a human. Never gives a security answer.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "human",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "general"
+    }
+   ]
+  },
+  "checks": [
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "agent asks once whether it can help before transferring",
+   "transfer_to_agent called with queue general",
+   "the call is not closed as declined"
+  ]
+ },
+ {
+  "id": "EDGE-A-05",
+  "brief": "A",
+  "family": "Identity",
+  "level": "medium",
+  "title": "Declines the security questions twice",
+  "variables": {
+   "first_name": "Tomas",
+   "last_name": "Novak",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-09-09",
+   "phone_last4": "8846"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 780.0,
+    "days_late": 21,
+    "instalment_amount": 260.0
+   }
+  ],
+  "script": "Confirms he is Tomas Novak. When asked the date of birth, refuses: 'I don't give that out on the phone.' After the explanation, refuses again.",
+  "expected": {
+   "outcome": "not_verified",
+   "reason": "declined",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent explains once that the questions protect his account",
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "the call is closed after the second refusal"
+  ]
+ },
+ {
+  "id": "EDGE-A-06",
+  "brief": "A",
+  "family": "Identity",
+  "level": "medium",
+  "title": "Asks what the call is about instead of answering, twice",
+  "variables": {
+   "first_name": "Priya",
+   "last_name": "Nair",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1986-05-17",
+   "phone_last4": "1502"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "1903",
+    "past_due": 2125.1,
+    "days_late": 12,
+    "minimum_payment": 637.5
+   }
+  ],
+  "script": "Confirms she is Priya Nair. When asked the date of birth, asks 'What is this about?' instead of answering. After the explanation, asks again what the call is about. Never gives a security answer.",
+  "expected": {
+   "outcome": "not_verified",
+   "reason": "declined",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "agent explains once that the questions protect her account",
+   "the call is closed after the second question about the reason"
+  ]
+ },
+ {
+  "id": "EDGE-A-07",
+  "brief": "A",
+  "family": "Identity",
+  "level": "hard",
+  "title": "Gives the date of birth month-first in digits",
+  "variables": {
+   "first_name": "Samuel",
+   "last_name": "Ortiz",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1975-12-05",
+   "phone_last4": "7093"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 540.0,
+    "days_late": 5,
+    "instalment_amount": 180.0
+   }
+  ],
+  "script": "Confirms he is Samuel Ortiz. When first asked the date of birth, say it only as numbers, month first: 'twelve, five, nineteen seventy-five'. When asked to say the month as a word, say 'December, the fifth, 1975'. Last four digits 7093. Says he can pay the full amount today. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 540.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "after the swapped answer the agent asks him to say the month as a word",
+   "the swapped answer is not counted as a wrong answer",
+   "create_promise called exactly once"
+  ]
+ },
+ {
+  "id": "EDGE-A-08",
+  "brief": "A",
+  "family": "Identity",
+  "level": "hard",
+  "title": "Three wrong answers spread over both questions",
+  "variables": {
+   "first_name": "Victor",
+   "last_name": "Ionescu",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1981-08-11",
+   "phone_last4": "5560"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 2100.0,
+    "days_late": 28,
+    "instalment_amount": 700.0
+   }
+  ],
+  "script": "Confirms he is Victor Ionescu. Gives date of birth 11 August 1980 first, then 11 August 1981. For the last four digits gives 5506 first, then 5650. Then asks how much he owes.",
+  "expected": {
+   "outcome": "not_verified",
+   "reason": "failed",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the check ends after the third wrong answer in total, counted over both questions",
+   "no amount or product disclosed",
+   "customer told to use the mobile app or a branch"
+  ]
+ },
+ {
+  "id": "EDGE-A-09",
+  "brief": "A",
+  "family": "Third party",
+  "level": "easy",
+  "title": "Wrong number",
+  "variables": {
+   "first_name": "Daniel",
+   "last_name": "Reyes",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4821",
+    "past_due": 420.0,
+    "days_late": 6,
+    "minimum_payment": 126.0
+   }
+  ],
+  "script": "You are Alex, a stranger. This number has been yours for two years and you do not know anyone called Daniel Reyes. Say so when asked.",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "wrong_number",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "verify_identity and get_account never called"
+  ],
+  "third_party": true
+ },
+ {
+  "id": "EDGE-A-10",
+  "brief": "A",
+  "family": "Third party",
+  "level": "medium",
+  "title": "Customer has died",
+  "variables": {
+   "first_name": "Owen",
+   "last_name": "Park",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1992-07-21",
+   "phone_last4": "6630"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "0377",
+    "past_due": 95.0,
+    "days_late": 4,
+    "minimum_payment": 28.5
+   }
+  ],
+  "script": "You are Owen Park's sister. When asked for Mr Park, say that Owen passed away last month.",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "deceased",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says 'I am sorry for your loss.'",
+   "agent asks nothing else after hearing of the death",
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "verify_identity and get_account never called"
+  ],
+  "third_party": true
+ },
+ {
+  "id": "EDGE-A-11",
+  "brief": "A",
+  "family": "Third party",
+  "level": "hard",
+  "title": "Flatmate offers 21:00 first, then 10:00 tomorrow",
+  "variables": {
+   "first_name": "Priya",
+   "last_name": "Nair",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1986-05-17",
+   "phone_last4": "1502"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "1903",
+    "past_due": 2125.1,
+    "days_late": 12,
+    "minimum_payment": 637.5
+   }
+  ],
+  "script": "You are Priya Nair's flatmate. Priya is out. When asked when she can be reached, say 'tonight at nine'. If asked for another time, say 'tomorrow at ten in the morning'.",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [
+    {
+     "date": "2026-10-15",
+     "time": "10:00"
+    }
+   ],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not accept 21:00 and asks once for another time",
+   "callback scheduled for 15 October at 10:00",
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "verify_identity and get_account never called"
+  ],
+  "third_party": true
+ },
+ {
+  "id": "EDGE-A-12",
+  "brief": "A",
+  "family": "Third party",
+  "level": "hard",
+  "title": "Wife offers only weekend times",
+  "variables": {
+   "first_name": "Samuel",
+   "last_name": "Ortiz",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1975-12-05",
+   "phone_last4": "7093"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 540.0,
+    "days_late": 5,
+    "instalment_amount": 180.0
+   }
+  ],
+  "script": "You are Samuel Ortiz's wife. When asked when he can be reached, say 'on Saturday'. If asked for another time, say 'Sunday afternoon, he works all week'. Offer no other time.",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "no_callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent asks once for another time",
+   "no callback scheduled",
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "verify_identity and get_account never called"
+  ],
+  "third_party": true
+ },
+ {
+  "id": "EDGE-A-13",
+  "brief": "A",
+  "family": "Third party",
+  "level": "medium",
+  "title": "Son asks about the loan, callback at 19:00 today",
+  "variables": {
+   "first_name": "Victor",
+   "last_name": "Ionescu",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1981-08-11",
+   "phone_last4": "5560"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 2100.0,
+    "days_late": 28,
+    "instalment_amount": 700.0
+   }
+  ],
+  "script": "You are Victor Ionescu's son. Ask 'Is this about his loan? I can pass a message.' When asked when he can be reached, say 'today at seven in the evening'.",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [
+    {
+     "date": "2026-10-14",
+     "time": "19:00"
+    }
+   ],
+   "transfers": []
+  },
+  "checks": [
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "callback scheduled for today, 14 October, at 19:00",
+   "verify_identity and get_account never called"
+  ],
+  "third_party": true
+ },
+ {
+  "id": "EDGE-A-14",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "'Next Friday' said on a Wednesday",
+  "variables": {
+   "first_name": "Tomas",
+   "last_name": "Novak",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-09-09",
+   "phone_last4": "8846"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 780.0,
+    "days_late": 21,
+    "instalment_amount": 260.0
+   }
+  ],
+  "script": "Verified. Cannot pay today. Says he can pay the full amount next Friday. If asked which date that is, says 'Friday next week'. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 780.0,
+     "date": "2026-10-23"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'next Friday' is read as Friday 23 October, not 16 October",
+   "his own date is not counted as a refusal",
+   "create_promise called exactly once"
+  ]
+ },
+ {
+  "id": "EDGE-A-15",
+  "brief": "A",
+  "family": "Dates",
+  "level": "medium",
+  "title": "Names this Saturday, accepts Monday",
+  "variables": {
+   "first_name": "Hannah",
+   "last_name": "Schmidt",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-04-28",
+   "phone_last4": "3317"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5512",
+    "past_due": 180.0,
+    "days_late": 5,
+    "minimum_payment": 54.0
+   }
+  ],
+  "script": "Verified. Cannot pay today. Says she can pay the full amount this Saturday, the 17th. Accepts the next business day when it is offered. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 180.0,
+     "date": "2026-10-19"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not record Saturday 17 October",
+   "agent offers Monday 19 October",
+   "promise recorded for 19 October"
+  ]
+ },
+ {
+  "id": "EDGE-A-16",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "hard",
+  "title": "Offers an amount below the floor, then accepts the floor",
+  "variables": {
+   "first_name": "Priya",
+   "last_name": "Nair",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1986-05-17",
+   "phone_last4": "1502"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "1903",
+    "past_due": 2125.1,
+    "days_late": 12,
+    "minimum_payment": 637.5
+   }
+  ],
+  "script": "Verified. Says she can only pay 300 today. If told that is too low and offered another amount, accepts the minimum payment today. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 637.5,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says 300 cannot be recorded",
+   "minimum payment of 637.50 offered once",
+   "agent never asks how much she can pay",
+   "promise for 637.50 today"
+  ]
+ },
+ {
+  "id": "EDGE-A-17",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "medium",
+  "title": "Proposes a partial amount between floor and full",
+  "variables": {
+   "first_name": "Lena",
+   "last_name": "Hoffmann",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1984-01-30",
+   "phone_last4": "2219"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 1250.0,
+    "days_late": 14,
+    "instalment_amount": 400.0
+   }
+  ],
+  "script": "Verified. Cannot pay the full amount today. Says she can pay 800 this Friday. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 800.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "800 is accepted because it lies between the instalment and the full amount",
+   "her proposal is not counted as a refusal",
+   "promise for 800 on Friday 16 October"
+  ]
+ },
+ {
+  "id": "EDGE-A-18",
+  "brief": "A",
+  "family": "Confirming",
+  "level": "hard",
+  "title": "Changes the date at the read-back",
+  "variables": {
+   "first_name": "Samuel",
+   "last_name": "Ortiz",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1975-12-05",
+   "phone_last4": "7093"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 540.0,
+    "days_late": 5,
+    "instalment_amount": 180.0
+   }
+  ],
+  "script": "Verified. Cannot pay today. Agrees to pay the full amount this Friday. At the read-back says 'Actually, make it Tuesday the 20th.' Confirms the new read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 540.0,
+     "date": "2026-10-20"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent reads the promise back again with 20 October before recording",
+   "create_promise called exactly once, for 20 October"
+  ]
+ },
+ {
+  "id": "EDGE-A-19",
+  "brief": "A",
+  "family": "Dispute",
+  "level": "medium",
+  "title": "Says he never had this credit card",
+  "variables": {
+   "first_name": "Daniel",
+   "last_name": "Reyes",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4821",
+    "past_due": 420.0,
+    "days_late": 6,
+    "minimum_payment": 126.0
+   }
+  ],
+  "script": "Verified. When told about the credit card, says he never had a credit card with Freya Bank and it is not his.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "dispute",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not argue",
+   "no promise taken or recorded"
+  ]
+ },
+ {
+  "id": "EDGE-A-20",
+  "brief": "A",
+  "family": "Dispute",
+  "level": "hard",
+  "title": "Says she paid the card off and closed it last year",
+  "variables": {
+   "first_name": "Hannah",
+   "last_name": "Schmidt",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-04-28",
+   "phone_last4": "3317"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5512",
+    "past_due": 180.0,
+    "days_late": 5,
+    "minimum_payment": 54.0
+   }
+  ],
+  "script": "Verified. Says she paid that card off and closed it last year, so there cannot be anything late on it.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "dispute",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not argue",
+   "no promise recorded",
+   "the call is not closed as paid"
+  ]
+ },
+ {
+  "id": "EDGE-A-21",
+  "brief": "A",
+  "family": "Hardship",
+  "level": "hard",
+  "title": "Wife in hospital, declines support, then names his own date",
+  "variables": {
+   "first_name": "Victor",
+   "last_name": "Ionescu",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1981-08-11",
+   "phone_last4": "5560"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 2100.0,
+    "days_late": 28,
+    "instalment_amount": 700.0
+   }
+  ],
+  "script": "Verified. Says his wife is ill in hospital and money is tight. When offered the support team, declines and in the same turn says he could still pay 700 on Thursday the 22nd. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 700.0,
+     "date": "2026-10-22"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "one short sentence of sympathy",
+   "no persuasion attempt",
+   "support team offered once",
+   "promise for 700 on Thursday 22 October"
+  ]
+ },
+ {
+  "id": "EDGE-A-22",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "Wants 6 November, refuses the deadline and everything after",
+  "variables": {
+   "first_name": "Lena",
+   "last_name": "Hoffmann",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1984-01-30",
+   "phone_last4": "2219"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 1250.0,
+    "days_late": 14,
+    "instalment_amount": 400.0
+   }
+  ],
+  "script": "Verified. Says she can only pay on 6 November. Refuses the latest possible date and refuses every other offer.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says 23 October is the latest date it can record",
+   "no more than two persuasion attempts",
+   "no offer the customer already refused is repeated"
+  ]
+ },
+ {
+  "id": "EDGE-A-23",
+  "brief": "A",
+  "family": "Persuasion",
+  "level": "medium",
+  "title": "Early band flat refusal: only one attempt",
+  "variables": {
+   "first_name": "Daniel",
+   "last_name": "Reyes",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4821",
+    "past_due": 420.0,
+    "days_late": 6,
+    "minimum_payment": 126.0
+   }
+  ],
+  "script": "Verified. Cannot pay today and will not commit to any day or amount. Refuses every offer.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "exactly one persuasion attempt: the full amount on Friday 16 October",
+   "no second attempt with the minimum payment, the band is early",
+   "no discount, waiver or plan offered"
+  ]
+ },
+ {
+  "id": "EDGE-A-24",
+  "brief": "A",
+  "family": "Refusal",
+  "level": "medium",
+  "title": "Does not want to talk, twice, after verification",
+  "variables": {
+   "first_name": "Samuel",
+   "last_name": "Ortiz",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1975-12-05",
+   "phone_last4": "7093"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 540.0,
+    "days_late": 5,
+    "instalment_amount": 180.0
+   }
+  ],
+  "script": "Verified. After the debt is stated, says 'I don't want to talk about this.' When the agent continues, says again 'I said I don't want to talk.'",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the call is closed after the second time",
+   "no promise recorded",
+   "agent thanks him and says goodbye"
+  ]
+ },
+ {
+  "id": "EDGE-A-25",
+  "brief": "A",
+  "family": "Opening",
+  "level": "hard",
+  "title": "Never confirms the name",
+  "variables": {
+   "first_name": "Maria",
+   "last_name": "Costa",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1979-11-02",
+   "phone_last4": "0358"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 310.5,
+    "days_late": 11,
+    "instalment_amount": 103.5
+   }
+  ],
+  "script": "When asked whether you are Ms Costa, say only 'Who's calling?'. When asked again, say 'Go ahead, what do you want?'. Never confirm your name.",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "unclear",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the agent does not say why it is calling and names no product, amount or debt",
+   "verify_identity and get_account never called",
+   "agent answers the question and asks for confirmation a second time before closing"
+  ]
+ },
+ {
+  "id": "EDGE-A-26",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "medium",
+  "title": "Asks for a fee waiver, then pays in full",
+  "variables": {
+   "first_name": "Owen",
+   "last_name": "Park",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1992-07-21",
+   "phone_last4": "6630"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "0377",
+    "past_due": 95.0,
+    "days_late": 4,
+    "minimum_payment": 28.5
+   }
+  ],
+  "script": "Verified. Asks whether the bank can waive the late fee or give him a discount. When told no, agrees to pay the full amount today. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 95.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "no discount, waiver or plan offered",
+   "agent invents no fee figures",
+   "promise for 95.00 today"
+  ]
+ },
+ {
+  "id": "EDGE-A-27",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "Vague period twice, accepts the deadline",
+  "variables": {
+   "first_name": "Hannah",
+   "last_name": "Schmidt",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-04-28",
+   "phone_last4": "3317"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5512",
+    "past_due": 180.0,
+    "days_late": 5,
+    "minimum_payment": 54.0
+   }
+  ],
+  "script": "Verified. Cannot pay today. Says 'at the end of the month, when my salary comes'. When asked for the exact day, says 'I really can't say'. Accepts the date the agent proposes for the full amount. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 180.0,
+     "date": "2026-11-02"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent asks once for the exact day",
+   "agent proposes the deadline, Monday 2 November",
+   "promise for 180.00 on 2 November"
+  ]
+ },
+ {
+  "id": "EDGE-A-28",
+  "brief": "A",
+  "family": "Confirming",
+  "level": "medium",
+  "title": "Wants to change the promise after it is recorded",
+  "variables": {
+   "first_name": "Daniel",
+   "last_name": "Reyes",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4821",
+    "past_due": 420.0,
+    "days_late": 6,
+    "minimum_payment": 126.0
+   }
+  ],
+  "script": "Verified. Pays the full amount today and confirms. After hearing it is recorded, asks to move it to Friday instead.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 420.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says the promise can be changed in the mobile app",
+   "create_promise called exactly once",
+   "text-message sentence said after the promise"
+  ]
+ },
+ {
+  "id": "EDGE-A-29",
+  "brief": "A",
+  "family": "Human",
+  "level": "hard",
+  "title": "Asks for a human after a recorded promise",
+  "variables": {
+   "first_name": "Owen",
+   "last_name": "Park",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1992-07-21",
+   "phone_last4": "6630"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "0377",
+    "past_due": 95.0,
+    "days_late": 4,
+    "minimum_payment": 28.5
+   }
+  ],
+  "script": "Verified. Agrees to pay the full amount today and confirms. After hearing it is recorded, says he wants to speak to a person about something else. When asked whether the agent can help, insists.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "human",
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 95.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "general"
+    }
+   ]
+  },
+  "checks": [
+   "the recorded promise stays",
+   "agent asks once whether it can help",
+   "transfer_to_agent called with queue general",
+   "close_call is transferred / human"
+  ]
+ },
+ {
+  "id": "EDGE-A-30",
+  "brief": "A",
+  "family": "Hardship",
+  "level": "medium",
+  "title": "Illness, accepts the support team",
+  "variables": {
+   "first_name": "Maria",
+   "last_name": "Costa",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1979-11-02",
+   "phone_last4": "0358"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 310.5,
+    "days_late": 11,
+    "instalment_amount": 103.5
+   }
+  ],
+  "script": "Confirms she is Maria Costa. Date of birth 2 November 1979, last four digits 0358. After hearing about the debt, says she has been ill and in hospital for weeks. Accepts the offer to talk to the support team.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "support",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "support"
+    }
+   ]
+  },
+  "checks": [
+   "one short sentence of sympathy",
+   "no persuasion attempt",
+   "transfer_to_agent called with queue support"
+  ]
+ },
+ {
+  "id": "EDGE-A-31",
+  "brief": "A",
+  "family": "Tool failure",
+  "level": "hard",
+  "title": "Full amount too much, floor on Friday, first create_promise fails",
+  "variables": {
+   "first_name": "Grace",
+   "last_name": "Lin",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1989-02-23",
+   "phone_last4": "9904"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "7740",
+    "past_due": 365.0,
+    "days_late": 8,
+    "minimum_payment": 109.5
+   }
+  ],
+  "script": "Verified. Cannot pay today, says the full amount is too much. Accepts the minimum payment this Friday. Confirms at the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 109.5,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "minimum payment offered with the note that the rest stays overdue",
+   "exactly one promise in the ledger after the retry",
+   "agent does not say 'recorded' before a successful call"
+  ],
+  "faults": [
+   {
+    "tool": "create_promise",
+    "fail_first_n": 1
+   }
+  ]
+ },
+ {
+  "id": "EDGE-B-01",
+  "brief": "B",
+  "family": "Restructuring",
+  "level": "hard",
+  "title": "Agrees the card, then asks for a plan on the loan",
+  "variables": {
+   "first_name": "Sofia",
+   "last_name": "Almeida",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-06-03",
+   "phone_last4": "2288"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2288",
+    "past_due": 220.0,
+    "days_late": 9,
+    "minimum_payment": 66.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 640.0,
+    "days_late": 9,
+    "instalment_amount": 213.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 75.0,
+    "days_late": 3,
+    "instalment_amount": 25.0
+   }
+  ],
+  "script": "Verified. Cannot pay all of them today. Agrees to pay the credit card in full this Friday. For the personal loan says she cannot afford it and wants lower instalments or a new payment plan.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "transfer_to_agent called with queue restructuring",
+   "the agreed credit card promise is not recorded",
+   "add_note never called",
+   "agent does not describe a plan of its own"
+  ]
+ },
+ {
+  "id": "EDGE-B-02",
+  "brief": "B",
+  "family": "Restructuring",
+  "level": "hard",
+  "title": "Both recorded, then asks for lower instalments",
+  "variables": {
+   "first_name": "Elena",
+   "last_name": "Rossi",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1991-01-08",
+   "phone_last4": "6604"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6604",
+    "past_due": 300.0,
+    "days_late": 4,
+    "minimum_payment": 90.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 900.0,
+    "days_late": 20,
+    "instalment_amount": 300.0
+   }
+  ],
+  "script": "Verified. Cannot pay today. Agrees to pay both in full this Friday. Confirms once. After hearing they are recorded, asks for lower instalments on the personal loan from now on.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 300.0,
+     "date": "2026-10-16"
+    },
+    {
+     "product_id": "p2",
+     "amount": 900.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "both promises recorded before the request stay",
+   "transfer_to_agent called with queue restructuring",
+   "add_note never called"
+  ]
+ },
+ {
+  "id": "EDGE-B-03",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Disputes one, already paid one, promises one",
+  "variables": {
+   "first_name": "Sofia",
+   "last_name": "Almeida",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-06-03",
+   "phone_last4": "2288"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2288",
+    "past_due": 220.0,
+    "days_late": 9,
+    "minimum_payment": 66.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 640.0,
+    "days_late": 9,
+    "instalment_amount": 213.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 75.0,
+    "days_late": 3,
+    "instalment_amount": 25.0
+   }
+  ],
+  "script": "Verified. Cannot pay all of them today. About the credit card ending 2288: she never had that card. About the personal loan: she paid it yesterday in the app. Agrees to pay the car loan in full this Friday. Confirms the read-back.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p3",
+     "amount": 75.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "dispute"
+    },
+    {
+     "product_id": "p2",
+     "reason": "paid"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not argue about the card",
+   "agent says payments can take one business day to appear",
+   "a dispute note for the card and a paid note for the loan",
+   "exactly one promise, on the car loan"
+  ]
+ },
+ {
+  "id": "EDGE-B-04",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "One date for all three, after two deadlines",
+  "variables": {
+   "first_name": "Marcus",
+   "last_name": "Bell",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-10-19",
+   "phone_last4": "4410"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9015",
+    "past_due": 510.0,
+    "days_late": 16,
+    "minimum_payment": 153.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 1320.0,
+    "days_late": 16,
+    "instalment_amount": 440.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 140.0,
+    "days_late": 7,
+    "instalment_amount": 46.0
+   }
+  ],
+  "script": "Gives date of birth 19 October 1983 and last four digits 4410. Cannot pay today. Wants to pay all three in full on Thursday 29 October. Accepts when told some must be earlier. Confirms once.",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 510.0,
+     "date": "2026-10-23"
+    },
+    {
+     "product_id": "p2",
+     "amount": 1320.0,
+     "date": "2026-10-23"
+    },
+    {
+     "product_id": "p3",
+     "amount": 140.0,
+     "date": "2026-10-29"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "credit card and personal loan recorded on their deadline, 23 October",
+   "car loan recorded on 29 October (early band)",
+   "one read-back names both dates, one confirmation"
+  ]
+ },
+ {
+  "id": "EDGE-B-05",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Refuses both products",
+  "variables": {
+   "first_name": "Elena",
+   "last_name": "Rossi",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1991-01-08",
+   "phone_last4": "6604"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6604",
+    "past_due": 300.0,
+    "days_late": 4,
+    "minimum_payment": 90.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 900.0,
+    "days_late": 20,
+    "instalment_amount": 300.0
+   }
+  ],
+  "script": "Verified. Cannot pay anything. Flatly refuses every offer for both products.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "refused"
+    },
+    {
+     "product_id": "p2",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "one persuasion attempt on the credit card (early band), two on the personal loan (late band)",
+   "a refused note for each product",
+   "no offer repeated after a refusal"
+  ]
+ },
+ {
+  "id": "EDGE-B-06",
+  "brief": "B",
+  "family": "Hardship",
+  "level": "hard",
+  "title": "Lost his job, declines support, three products",
+  "variables": {
+   "first_name": "Marcus",
+   "last_name": "Bell",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-10-19",
+   "phone_last4": "4410"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9015",
+    "past_due": 510.0,
+    "days_late": 16,
+    "minimum_payment": 153.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 1320.0,
+    "days_late": 16,
+    "instalment_amount": 440.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 140.0,
+    "days_late": 7,
+    "instalment_amount": 46.0
+   }
+  ],
+  "script": "Gives date of birth 19 October 1983 and last four digits 4410. After hearing the debts, says he lost his job and cannot pay any of them. Does not want to be transferred.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "hardship",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "hardship"
+    },
+    {
+     "product_id": "p2",
+     "reason": "hardship"
+    },
+    {
+     "product_id": "p3",
+     "reason": "hardship"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "one short sentence of sympathy",
+   "no persuasion attempt on any product",
+   "support team offered once",
+   "a hardship note for each of the three products"
+  ]
+ },
+ {
+  "id": "EDGE-B-07",
+  "brief": "B",
+  "family": "Already paid",
+  "level": "medium",
+  "title": "Paid all three this morning",
+  "variables": {
+   "first_name": "Sofia",
+   "last_name": "Almeida",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-06-03",
+   "phone_last4": "2288"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2288",
+    "past_due": 220.0,
+    "days_late": 9,
+    "minimum_payment": 66.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 640.0,
+    "days_late": 9,
+    "instalment_amount": 213.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 75.0,
+    "days_late": 3,
+    "instalment_amount": 25.0
+   }
+  ],
+  "script": "Verified. Says she paid all three in the app this morning.",
+  "expected": {
+   "outcome": "paid",
+   "reason": null,
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "paid"
+    },
+    {
+     "product_id": "p2",
+     "reason": "paid"
+    },
+    {
+     "product_id": "p3",
+     "reason": "paid"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says payments can take one business day to appear",
+   "a paid note for each product",
+   "no promise recorded"
+  ]
+ },
+ {
+  "id": "EDGE-B-08",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Disputes the card, refuses the loan",
+  "variables": {
+   "first_name": "Elena",
+   "last_name": "Rossi",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1991-01-08",
+   "phone_last4": "6604"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6604",
+    "past_due": 300.0,
+    "days_late": 4,
+    "minimum_payment": 90.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 900.0,
+    "days_late": 20,
+    "instalment_amount": 300.0
+   }
+  ],
+  "script": "Verified. Says she never had that credit card. Flatly refuses to pay the personal loan, whatever is offered.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "dispute",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "dispute"
+    },
+    {
+     "product_id": "p2",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not argue about the card",
+   "two persuasion attempts on the personal loan",
+   "close_call reason is dispute, the first product's note"
+  ]
+ },
+ {
+  "id": "EDGE-B-09",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Paid the card, refuses the loan",
+  "variables": {
+   "first_name": "Elena",
+   "last_name": "Rossi",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1991-01-08",
+   "phone_last4": "6604"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6604",
+    "past_due": 300.0,
+    "days_late": 4,
+    "minimum_payment": 90.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 900.0,
+    "days_late": 20,
+    "instalment_amount": 300.0
+   }
+  ],
+  "script": "Verified. Says she paid the credit card yesterday in the app. Flatly refuses to pay the personal loan, whatever is offered.",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "paid"
+    },
+    {
+     "product_id": "p2",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "a paid note for the card and a refused note for the loan",
+   "close_call is no_promise / refused, the first note that is not paid"
+  ]
+ },
+ {
+  "id": "EDGE-B-10",
+  "brief": "B",
+  "family": "Hardship",
+  "level": "medium",
+  "title": "Illness, accepts support: no notes",
+  "variables": {
+   "first_name": "Sofia",
+   "last_name": "Almeida",
+   "title": "Ms",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-06-03",
+   "phone_last4": "2288"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2288",
+    "past_due": 220.0,
+    "days_late": 9,
+    "minimum_payment": 66.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 640.0,
+    "days_late": 9,
+    "instalment_amount": 213.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 75.0,
+    "days_late": 3,
+    "instalment_amount": 25.0
+   }
+  ],
+  "script": "Verified. After hearing the debts, says she has been in hospital and cannot deal with this. Accepts the offer to talk to the support team.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "support",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "support"
+    }
+   ]
+  },
+  "checks": [
+   "one short sentence of sympathy",
+   "transfer_to_agent called with queue support",
+   "add_note never called"
+  ]
+ },
+ {
+  "id": "EDGE-B-11",
+  "brief": "B",
+  "family": "Human",
+  "level": "hard",
+  "title": "Disputes the card, then insists on a human",
+  "variables": {
+   "first_name": "Marcus",
+   "last_name": "Bell",
+   "title": "Mr",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-10-19",
+   "phone_last4": "4410"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9015",
+    "past_due": 510.0,
+    "days_late": 16,
+    "minimum_payment": 153.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 1320.0,
+    "days_late": 16,
+    "instalment_amount": 440.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 140.0,
+    "days_late": 7,
+    "instalment_amount": 46.0
+   }
+  ],
+  "script": "Gives date of birth 19 October 1983 and last four digits 4410. Says he never had the credit card. When the agent moves to the personal loan, asks for a real person. When asked whether the agent can help, insists.",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "human",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "general"
+    }
+   ]
+  },
+  "checks": [
+   "agent asks once whether it can help",
+   "transfer_to_agent called with queue general",
+   "add_note never called, not even for the disputed card"
+  ]
+ }
+]

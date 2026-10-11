@@ -1,0 +1,2091 @@
+[
+ {
+  "id": "TR-A-01",
+  "brief": "A",
+  "family": "Dates",
+  "level": "medium",
+  "title": "'Haftaya Cuma' said on a Wednesday (late band, lands on the deadline)",
+  "variables": {
+   "first_name": "Ahmet",
+   "last_name": "Yılmaz",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1984-05-12",
+   "phone_last4": "3307"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 960.0,
+    "days_late": 10,
+    "instalment_amount": 320.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on iki Mayıs seksen dört\" and phone last four as \"otuz üç sıfır yedi\". To \"Bugün ödeyebilir misiniz?\" says \"Bugün olmaz, haftaya Cuma öderim, tamamını.\" Confirms the read-back with \"Evet, onaylıyorum.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 960.0,
+     "date": "2026-10-23"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'haftaya Cuma' on Wednesday 14 Oct resolved to Friday 23 Oct, not 16 Oct",
+   "23 Oct accepted (equals the late-band deadline, inclusive)",
+   "create_promise called exactly once for 960 on 2026-10-23",
+   "text-message confirmation sentence said after the promise"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-02",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "'Haftaya Cuma' said on a Friday",
+  "variables": {
+   "first_name": "Ayşe",
+   "last_name": "Demir",
+   "title": "Bayan",
+   "now": "2026-10-16T15:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-02-21",
+   "phone_last4": "5518"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9182",
+    "past_due": 410.0,
+    "days_late": 5,
+    "minimum_payment": 123.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi bir Şubat doksan\" and phone last four as \"elli beş on sekiz\". Says \"Bugün maaş yatmadı, haftaya Cuma tamamını öderim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 410.0,
+     "date": "2026-10-23"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'haftaya Cuma' said on Friday 16 Oct is recorded as Friday 23 Oct (rule 22), not today",
+   "full amount 410 recorded",
+   "read-back names credit card ending 9182, 410 and 23 October before create_promise"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-03",
+  "brief": "A",
+  "family": "Dates",
+  "level": "easy",
+  "title": "'Ayın on beşi' (day of month only)",
+  "variables": {
+   "first_name": "Mehmet",
+   "last_name": "Kaya",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1979-11-03",
+   "phone_last4": "2264"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 530.0,
+    "days_late": 4,
+    "instalment_amount": 177.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"üç Kasım yetmiş dokuz\" and phone last four as \"yirmi iki altmış dört\". Says \"Bugün değil ama ayın on beşinde yatırırım, hepsini.\" Confirms with \"Tamam, onaylıyorum.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 530.0,
+     "date": "2026-10-15"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'ayın on beşi' resolved to Thursday 15 October 2026",
+   "product named as car loan, past-due 530 and 4 days late stated after verification",
+   "exactly one create_promise for 530 on 2026-10-15"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-04",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "'Maaş yatınca' stays vague, agent proposes the early-band deadline",
+  "variables": {
+   "first_name": "Elif",
+   "last_name": "Şahin",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-07-08",
+   "phone_last4": "6420"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4415",
+    "past_due": 275.0,
+    "days_late": 5,
+    "minimum_payment": 82.5
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"sekiz Temmuz doksan üç\" and phone last four as \"altmış dört yirmi\". Says \"Bugün param yok, maaş yatınca öderim.\" When asked for the exact day says \"Valla bilmiyorum, maaş ne zaman yatarsa işte.\" Accepts the date the agent proposes with \"Olur, o gün öderim, tamamını.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 275.0,
+     "date": "2026-11-02"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent asks exactly once for the exact day",
+   "agent then proposes the deadline itself: Monday 2 November (12th business day, skipping the 26 Oct holiday)",
+   "vague answer not treated as a refusal (no persuasion ladder)",
+   "promise 275 on 2026-11-02"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-05",
+  "brief": "A",
+  "family": "Dates",
+  "level": "medium",
+  "title": "'Yirmi üç Ekim' exactly on the late-band deadline",
+  "variables": {
+   "first_name": "Mustafa",
+   "last_name": "Çelik",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1975-01-30",
+   "phone_last4": "8806"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 1480.0,
+    "days_late": 30,
+    "instalment_amount": 494.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"otuz Ocak yetmiş beş\" and phone last four as \"seksen sekiz sıfır altı\". Says \"Bugün yok. Yirmi üç Ekim'de tamamını yatırırım.\" Confirms with \"Evet, doğru.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 1480.0,
+     "date": "2026-10-23"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "23 October accepted without pushback (deadline is inclusive)",
+   "agent does not propose an earlier date or a lower amount",
+   "exactly one promise 1480 on 2026-10-23"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-06",
+  "brief": "A",
+  "family": "Identity",
+  "level": "medium",
+  "title": "Date of birth given only as numbers, day first",
+  "variables": {
+   "first_name": "Zeynep",
+   "last_name": "Arslan",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1985-07-03",
+   "phone_last4": "1945"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "7731",
+    "past_due": 190.0,
+    "days_late": 3,
+    "minimum_payment": 57.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms with \"Benim, buyurun.\" For date of birth says only numbers: \"sıfır üç, sıfır yedi, seksen beş\". Phone last four \"on dokuz kırk beş\". Says \"Bugün hepsini öderim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 190.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "verify_identity receives date_of_birth 1985-07-03 (numbers read day, month, year)",
+   "agent does not ask the date of birth twice",
+   "promise 190 for today 2026-10-14"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-07",
+  "brief": "A",
+  "family": "Identity",
+  "level": "hard",
+  "title": "Day and month swapped, retry with the month as a word",
+  "variables": {
+   "first_name": "Emre",
+   "last_name": "Doğan",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-10-05",
+   "phone_last4": "3092"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 615.0,
+    "days_late": 9,
+    "instalment_amount": 205.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms with \"Evet, Emre Doğan benim.\" For date of birth says \"on, beş, doksan\" (month first, American style). When asked to say the month as a word says \"Beş Ekim doksan.\" Phone last four \"otuz doksan iki\". Says \"Bugün olmaz, öbür gün tamamını yatırırım.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 615.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "first verify_identity sent as 1990-05-10 returns the day_month_swapped hint",
+   "agent asks for the month as a word; that retry is not counted as a wrong answer",
+   "'öbür gün' on Wednesday resolved to Friday 16 October",
+   "promise 615 on 2026-10-16"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-08",
+  "brief": "A",
+  "family": "Dates",
+  "level": "medium",
+  "title": "Numeric '15/10' promise date",
+  "variables": {
+   "first_name": "Fatma",
+   "last_name": "Aydın",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1982-12-19",
+   "phone_last4": "7713"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 840.0,
+    "days_late": 6,
+    "instalment_amount": 280.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on dokuz Aralık seksen iki\" and phone last four as \"yetmiş yedi on üç\". Says \"Bugün olmaz. 15/10'da öderim\" (spoken \"on beş on\"). If asked, clarifies \"on beş Ekim\". Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 840.0,
+     "date": "2026-10-15"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'15/10' read as day/month = 15 October 2026",
+   "promise 840 on 2026-10-15",
+   "create_promise called once"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-09",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "'Yarın' said on a Friday falls on Saturday",
+  "variables": {
+   "first_name": "Burak",
+   "last_name": "Öztürk",
+   "title": "Bay",
+   "now": "2026-10-16T15:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-04-26",
+   "phone_last4": "6034"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2290",
+    "past_due": 350.0,
+    "days_late": 11,
+    "minimum_payment": 105.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi altı Nisan seksen sekiz\" and phone last four as \"altmış otuz dört\". Says \"Bugün yetişmez, yarın öderim, hepsini.\" When told Saturday is not possible and offered Monday says \"Tamam, Pazartesi olsun.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 350.0,
+     "date": "2026-10-19"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'yarın' on Friday 16 Oct = Saturday 17 Oct is not recorded",
+   "agent offers the next business day, Monday 19 October",
+   "promise 350 on 2026-10-19"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-10",
+  "brief": "A",
+  "family": "Dates",
+  "level": "medium",
+  "title": "'Hafta sonu' (weekend) moves to Monday",
+  "variables": {
+   "first_name": "Selin",
+   "last_name": "Koç",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1996-09-14",
+   "phone_last4": "4128"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 390.0,
+    "days_late": 3,
+    "instalment_amount": 130.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on dört Eylül doksan altı\" and phone last four as \"kırk bir yirmi sekiz\". Says \"Bugün olmaz, hafta sonu öderim, tamamını.\" If asked which day says \"Cumartesi.\" Accepts the offered Monday with \"Olur.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 390.0,
+     "date": "2026-10-19"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "no weekend date recorded",
+   "agent offers Monday 19 October as the next business day",
+   "promise 390 on 2026-10-19"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-11",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "'Ay sonu' → Saturday 31 Oct → next business day 2 Nov",
+  "variables": {
+   "first_name": "Hakan",
+   "last_name": "Yıldız",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1981-06-27",
+   "phone_last4": "9051"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 720.0,
+    "days_late": 2,
+    "instalment_amount": 240.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi yedi Haziran seksen bir\" and phone last four as \"doksan elli bir\". Says \"Ay sonu gibi öderim.\" When asked for the exact day says \"Otuz bir Ekim.\" Accepts the offered next business day with \"Peki.\" Pays the full amount. Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 720.0,
+     "date": "2026-11-02"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent asks once for the exact day after 'ay sonu'",
+   "31 October recognised as a Saturday; agent offers Monday 2 November",
+   "2 November is inside the early-band deadline (equal to it)",
+   "promise 720 on 2026-11-02"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-12",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "Holiday 11 November (Wednesday) inside the deadline",
+  "variables": {
+   "first_name": "Derya",
+   "last_name": "Kılıç",
+   "title": "Bayan",
+   "now": "2026-10-30T14:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-03-09",
+   "phone_last4": "2577"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6610",
+    "past_due": 260.0,
+    "days_late": 4,
+    "minimum_payment": 78.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"dokuz Mart seksen yedi\" and phone last four as \"yirmi beş yetmiş yedi\". Says \"Bugün olmaz, on bir Kasım'da öderim, tamamını.\" Accepts the offered next business day with \"Tamam.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 260.0,
+     "date": "2026-11-12"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "11 November not recorded (bank holiday)",
+   "agent offers Thursday 12 November, inside the early-band deadline (18 November)",
+   "promise 260 on 2026-11-12"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-13",
+  "brief": "A",
+  "family": "Dates",
+  "level": "hard",
+  "title": "Date after the deadline, said on a Monday",
+  "variables": {
+   "first_name": "Murat",
+   "last_name": "Aksoy",
+   "title": "Bay",
+   "now": "2026-10-19T10:30"
+  },
+  "identity": {
+   "date_of_birth": "1977-08-15",
+   "phone_last4": "6682"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 1150.0,
+    "days_late": 15,
+    "instalment_amount": 383.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on beş Ağustos yetmiş yedi\" and phone last four as \"altmış altı seksen iki\". Says \"Bugün yok. Kasım'ın beşinde maaş yatıyor, o gün öderim.\" Accepts the latest date when offered with \"Tamam, o gün olsun.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 1150.0,
+     "date": "2026-10-29"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "5 November not accepted; agent names the latest possible date",
+   "late-band deadline from Monday 19 Oct is Thursday 29 October",
+   "own date not counted as a refusal (no floor offer, no attempt 2)",
+   "promise 1150 on 2026-10-29"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-14",
+  "brief": "A",
+  "family": "Self-correction",
+  "level": "hard",
+  "title": "'Pazartesi değil, Salı' at the read-back",
+  "variables": {
+   "first_name": "Gizem",
+   "last_name": "Erdoğan",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1992-01-04",
+   "phone_last4": "3815"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 460.0,
+    "days_late": 12,
+    "instalment_amount": 153.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"dört Ocak doksan iki\" and phone last four as \"otuz sekiz on beş\". Says \"Bugün olmaz, haftaya Pazartesi tamamını öderim.\" At the read-back says \"Pardon, Pazartesi değil Salı.\" Confirms the second read-back with \"Evet, onaylıyorum.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 460.0,
+     "date": "2026-10-20"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "first read-back names Monday 19 October",
+   "after the correction the agent reads back again with Tuesday 20 October",
+   "create_promise called only once, with 2026-10-20"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-15",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "medium",
+  "title": "'Dört yüz elli lira' between floor and full",
+  "variables": {
+   "first_name": "Can",
+   "last_name": "Polat",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1986-10-22",
+   "phone_last4": "5049"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 900.0,
+    "days_late": 9,
+    "instalment_amount": 300.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi iki Ekim seksen altı\" and phone last four as \"elli kırk dokuz\". To the full amount says \"Dokuz yüzün hepsi olmaz, dört yüz elli lira verebilirim, bu Cuma.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 450.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "450 accepted directly (between floor 300 and full 900)",
+   "agent does not push for the full amount after the customer's own amount",
+   "promise 450 on Friday 16 October"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-16",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "medium",
+  "title": "'Bin iki yüz' today on a larger card balance",
+  "variables": {
+   "first_name": "Ebru",
+   "last_name": "Kurt",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-04-02",
+   "phone_last4": "2618"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "0573",
+    "past_due": 1850.0,
+    "days_late": 7,
+    "minimum_payment": 555.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"iki Nisan seksen üç\" and phone last four as \"yirmi altı on sekiz\". To \"Bugün ödeyebilir misiniz?\" says \"Hepsini değil ama bugün bin iki yüz yatırabilirim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 1200.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "'bin iki yüz' recorded as 1200 (not 200 or 1002)",
+   "1200 accepted (>= minimum 555, <= full 1850)",
+   "promise 1200 dated today 2026-10-14"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-17",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "hard",
+  "title": "'Dört yüz elli virgül beş' just above the floor",
+  "variables": {
+   "first_name": "Serkan",
+   "last_name": "Özdemir",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1980-02-11",
+   "phone_last4": "7307"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "3348",
+    "past_due": 1501.0,
+    "days_late": 13,
+    "minimum_payment": 450.3
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on bir Şubat seksen\" and phone last four as \"yetmiş üç sıfır yedi\". Says \"Bin beş yüz bir çok. Dört yüz elli virgül beş verebilirim, bu Cuma.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 450.5,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "amount recorded as 450.5, not 450 or 4505",
+   "accepted because it is at or above the minimum payment 450.30",
+   "promise dated Friday 16 October"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-18",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "medium",
+  "title": "'Yarısını' equals the floor",
+  "variables": {
+   "first_name": "Merve",
+   "last_name": "Şimşek",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1994-08-30",
+   "phone_last4": "1182"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 800.0,
+    "days_late": 20,
+    "instalment_amount": 400.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"otuz Ağustos doksan dört\" and phone last four as \"on bir seksen iki\". Says \"Hepsini ödeyemem, yarısını yarın yatırırım.\" Confirms the read-back of 400 with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 400.0,
+     "date": "2026-10-15"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent converts 'yarısı' into the concrete amount 400 in the read-back",
+   "400 accepted (equal to the floor)",
+   "promise 400 on 2026-10-15"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-19",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "medium",
+  "title": "'Asgari ne kadarsa onu'",
+  "variables": {
+   "first_name": "Oğuz",
+   "last_name": "Tekin",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1978-05-05",
+   "phone_last4": "4490"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "1207",
+    "past_due": 600.0,
+    "days_late": 9,
+    "minimum_payment": 180.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"beş Mayıs yetmiş sekiz\" and phone last four as \"kırk dört doksan\". Says \"Altı yüz çok fazla. Asgari ne kadarsa onu öderim, bu Cuma.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 180.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent states the minimum payment 180 itself",
+   "agent says the rest stays overdue",
+   "promise 180 on Friday 16 October"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-20",
+  "brief": "A",
+  "family": "Amounts",
+  "level": "hard",
+  "title": "Below the floor, then accepts the floor",
+  "variables": {
+   "first_name": "Deniz",
+   "last_name": "Acar",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1991-12-01",
+   "phone_last4": "6655"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 960.0,
+    "days_late": 18,
+    "instalment_amount": 320.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"bir Aralık doksan bir\" and phone last four as \"altmış altı elli beş\". Says \"Ancak iki yüz lira verebilirim, öbür gün.\" When told 200 cannot be recorded and offered 320 says \"Peki, üç yüz yirmi olsun.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 320.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "200 is not recorded; agent says it cannot be recorded",
+   "floor 320 offered once",
+   "promise 320 on Friday 16 October ('öbür gün' from Wednesday)"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-21",
+  "brief": "A",
+  "family": "Identity",
+  "level": "medium",
+  "title": "Phone last four split across two turns",
+  "variables": {
+   "first_name": "Kemal",
+   "last_name": "Bulut",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-11-25",
+   "phone_last4": "4471"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 305.0,
+    "days_late": 6,
+    "instalment_amount": 102.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms with \"Evet benim.\" Date of birth \"yirmi beş Kasım seksen üç\". For the phone says only \"Kırk dört...\" and stops; on the next turn (or when prompted) says \"...yetmiş bir.\" Says \"Bugün tamamını öderim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 305.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "verify_identity called with 4471 only after both halves are heard (not with '44')",
+   "no wrong answer counted for the pause",
+   "promise 305 today 2026-10-14"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-22",
+  "brief": "A",
+  "family": "Identity",
+  "level": "medium",
+  "title": "Date of birth split across turns",
+  "variables": {
+   "first_name": "Sevgi",
+   "last_name": "Uçar",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-03-14",
+   "phone_last4": "8023"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5560",
+    "past_due": 145.0,
+    "days_late": 2,
+    "minimum_payment": 43.5
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms with \"Benim.\" For date of birth says \"On dört Mart...\" then pauses; next turn says \"...seksen sekiz.\" Phone last four \"seksen yirmi üç\". Says \"Tamamını bugün öderim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 145.0,
+     "date": "2026-10-14"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "verify_identity receives 1988-03-14 in one call (no call with a missing year)",
+   "agent waits for or asks for the year instead of counting a wrong answer",
+   "promise 145 today"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-23",
+  "brief": "A",
+  "family": "Self-correction",
+  "level": "medium",
+  "title": "'Yirmi bir, pardon yirmi' for the date",
+  "variables": {
+   "first_name": "Tolga",
+   "last_name": "Çetin",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1985-09-09",
+   "phone_last4": "3364"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 700.0,
+    "days_late": 25,
+    "instalment_amount": 234.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"dokuz Eylül seksen beş\" and phone last four as \"otuz üç altmış dört\". Says \"Yirmi bir Ekim'de... pardon, yirmi Ekim'de tamamını öderim.\" Confirms the read-back with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 700.0,
+     "date": "2026-10-20"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent uses the corrected date, 20 October",
+   "read-back says Tuesday 20 October, 700",
+   "exactly one promise on 2026-10-20"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-24",
+  "brief": "A",
+  "family": "Self-correction",
+  "level": "hard",
+  "title": "Amount changed to the minimum at the read-back",
+  "variables": {
+   "first_name": "Pınar",
+   "last_name": "Güneş",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-06-18",
+   "phone_last4": "9218"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "8812",
+    "past_due": 700.0,
+    "days_late": 10,
+    "minimum_payment": 210.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on sekiz Haziran doksan\" and phone last four as \"doksan iki on sekiz\". Agrees \"Tamam, bu Cuma tamamını öderim.\" At the read-back says \"Aslında hepsi zor, asgariyi yatırayım.\" Confirms the new read-back with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 210.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "new amount checked and read back again before create_promise",
+   "create_promise called once, with 210 (not 700)",
+   "promise dated 2026-10-16"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-25",
+  "brief": "A",
+  "family": "Identity",
+  "level": "medium",
+  "title": "'Neden soruyorsunuz?' twice instead of answering",
+  "variables": {
+   "first_name": "Barış",
+   "last_name": "Korkmaz",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1979-03-23",
+   "phone_last4": "2803"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 380.0,
+    "days_late": 8,
+    "instalment_amount": 127.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms \"Evet, benim.\" When asked the date of birth says \"Neden soruyorsunuz? Ne için arıyorsunuz?\" After the explanation asks again \"Önce ne için aradığınızı söyleyin, hangi hesap?\" Never answers the security question.",
+  "expected": {
+   "outcome": "not_verified",
+   "reason": "declined",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent explains once that the questions protect the account",
+   "no product, amount, 'borç' or collections wording before verification",
+   "call closed as not_verified / declined after the second question"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-26",
+  "brief": "A",
+  "family": "Conversation",
+  "level": "medium",
+  "title": "'Robot musun?' and 'Dolandırıcı mısınız?', then pays",
+  "variables": {
+   "first_name": "Esra",
+   "last_name": "Aslan",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1995-05-16",
+   "phone_last4": "5370"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 255.0,
+    "days_late": 5,
+    "instalment_amount": 85.0
+   }
+  ],
+  "script": "Speaks Turkish only. After the opening asks \"Robot musunuz siz?\" then \"Bayan Aslan benim.\" Gives date of birth \"on altı Mayıs doksan beş\". Before giving the phone digits asks \"Dolandırıcı olmadığınızı nereden bileyim?\" then gives \"elli üç yetmiş\". Says \"Haftaya Salı tamamını öderim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 255.0,
+     "date": "2026-10-20"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says it is Freya Bank's digital assistant",
+   "agent tells her she can verify by calling Freya Bank's customer service number",
+   "'haftaya Salı' on Wednesday resolved to Tuesday 20 October",
+   "promise 255 on 2026-10-20"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-27",
+  "brief": "A",
+  "family": "Third party",
+  "level": "medium",
+  "title": "Wife answers, first time out of window, then valid",
+  "variables": {
+   "first_name": "Volkan",
+   "last_name": "Karaca",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1982-07-07",
+   "phone_last4": "6124"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "4401",
+    "past_due": 330.0,
+    "days_late": 14,
+    "minimum_payment": 99.0
+   }
+  ],
+  "script": "Speaks Turkish only. The person who answers is his wife: \"Ben eşiyim, Volkan evde yok. Ne için aramıştınız?\" Offers \"Borcu varsa ben öderim.\" When asked when he can be reached says \"Akşam sekizde gelir.\" When asked for another time says \"Yarın sabah on buçukta arayın.\"",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [
+    {
+     "date": "2026-10-15",
+     "time": "10:30"
+    }
+   ],
+   "transfers": []
+  },
+  "checks": [
+   "agent says nothing beyond the opening sentence (no product, amount, debt)",
+   "20:00 rejected once, agent asks for another time",
+   "callback scheduled 2026-10-15 at 10:30",
+   "verify_identity and get_account never called"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-28",
+  "brief": "A",
+  "family": "Third party",
+  "level": "hard",
+  "title": "Mother answers, two times outside the window (Friday)",
+  "variables": {
+   "first_name": "Nur",
+   "last_name": "Tunç",
+   "title": "Bayan",
+   "now": "2026-10-16T15:00"
+  },
+  "identity": {
+   "date_of_birth": "1997-02-28",
+   "phone_last4": "7342"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 480.0,
+    "days_late": 4,
+    "instalment_amount": 160.0
+   }
+  ],
+  "script": "Speaks Turkish only. The person who answers is her mother: \"Ben annesiyim, Nur işte.\" Asks \"Kredi kartı borcu mu var? Ne kadar?\" When asked when Nur can be reached says \"Yarın arayın, Cumartesi evde.\" When asked for another time says \"Bu akşam dokuzdan sonra.\"",
+  "expected": {
+   "outcome": "not_reached",
+   "reason": "no_callback",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the mother is told nothing about the account",
+   "Saturday rejected, agent asks once for another time",
+   "21:00 also outside 10:00-19:00, no schedule_callback call",
+   "closed as not_reached / no_callback"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-29",
+  "brief": "A",
+  "family": "Conversation",
+  "level": "medium",
+  "title": "Angry, insulting customer still promises",
+  "variables": {
+   "first_name": "Cem",
+   "last_name": "Avcı",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1976-10-10",
+   "phone_last4": "1259"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 1020.0,
+    "days_late": 16,
+    "instalment_amount": 340.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on Ekim yetmiş altı\" and phone last four as \"on iki elli dokuz\". After the debt is stated shouts \"Bıktım sizin aramalarınızdan, saçmalık bu!\" and insults the bank. Then says \"Tamam be, haftaya Çarşamba yatırırım hepsini.\" Confirms with \"Evet, tamam.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 1020.0,
+     "date": "2026-10-21"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent stays polite and does not argue back",
+   "'haftaya Çarşamba' resolved to Wednesday 21 October",
+   "promise 1020 on 2026-10-21"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-30",
+  "brief": "A",
+  "family": "Refusal",
+  "level": "medium",
+  "title": "'Beni bir daha aramayın' twice after verification",
+  "variables": {
+   "first_name": "Hülya",
+   "last_name": "Bozkurt",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1984-08-08",
+   "phone_last4": "2096"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "7004",
+    "past_due": 520.0,
+    "days_late": 20,
+    "minimum_payment": 156.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"sekiz Ağustos seksen dört\" and phone last four as \"yirmi doksan altı\". After the debt is stated says \"Konuşmak istemiyorum, beni bir daha aramayın.\" To anything else repeats \"Dedim ya, aramayın beni, konuşmak istemiyorum.\"",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "call closed after the second 'do not want to talk'",
+   "no promise recorded",
+   "closed as no_promise / refused (identity was verified)"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-31",
+  "brief": "A",
+  "family": "Transfer",
+  "level": "medium",
+  "title": "'Bir yetkiliyle görüşmek istiyorum' insisted",
+  "variables": {
+   "first_name": "Okan",
+   "last_name": "Yavuz",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1989-04-17",
+   "phone_last4": "8451"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 670.0,
+    "days_late": 7,
+    "instalment_amount": 224.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on yedi Nisan seksen dokuz\" and phone last four as \"seksen dört elli bir\". After the debt is stated says \"Ben bir yetkiliyle, gerçek bir insanla görüşmek istiyorum.\" When the agent asks if it can help first says \"Hayır, yetkiliye bağlayın lütfen.\"",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "human",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "general"
+    }
+   ]
+  },
+  "checks": [
+   "agent asks once whether it can help first",
+   "transfer_to_agent called with queue general",
+   "no promise recorded; closed transferred / human"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-32",
+  "brief": "A",
+  "family": "Already paid",
+  "level": "easy",
+  "title": "'Zaten ödedim, dekontu attım'",
+  "variables": {
+   "first_name": "Leyla",
+   "last_name": "Ateş",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1991-03-03",
+   "phone_last4": "3639"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2525",
+    "past_due": 230.0,
+    "days_late": 3,
+    "minimum_payment": 69.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"üç Mart doksan bir\" and phone last four as \"otuz altı otuz dokuz\". After the debt is stated says \"Ben bunu zaten ödedim, dün akşam havale yaptım, dekontu da attım.\"",
+  "expected": {
+   "outcome": "paid",
+   "reason": null,
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent says payments can take one business day to appear",
+   "no promise recorded",
+   "agent does not claim to see or verify the receipt"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-33",
+  "brief": "A",
+  "family": "Dispute",
+  "level": "medium",
+  "title": "'Bu kartı yıllar önce kapattım'",
+  "variables": {
+   "first_name": "Sinan",
+   "last_name": "Eren",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1974-12-12",
+   "phone_last4": "4807"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "9911",
+    "past_due": 310.0,
+    "days_late": 22,
+    "minimum_payment": 93.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on iki Aralık yetmiş dört\" and phone last four as \"kırk sekiz sıfır yedi\". After the debt is stated says \"Bu borç benim değil, o kartı yıllar önce kapattım, ödedim bitirdim.\"",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "dispute",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "agent does not argue and takes no promise",
+   "no persuasion attempt made",
+   "closed as no_promise / dispute (past closure counts as dispute, not paid)"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-34",
+  "brief": "A",
+  "family": "Hardship",
+  "level": "medium",
+  "title": "'İşten çıkarıldım', accepts the support team",
+  "variables": {
+   "first_name": "Tuğba",
+   "last_name": "Sarı",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1993-10-30",
+   "phone_last4": "5182"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 890.0,
+    "days_late": 17,
+    "instalment_amount": 297.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"otuz Ekim doksan üç\" and phone last four as \"elli bir seksen iki\". After the debt is stated says \"Geçen ay işten çıkarıldım, şu an hiçbir şey ödeyemem.\" When offered the support team says \"Evet, bağlayın lütfen.\"",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "support",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "support"
+    }
+   ]
+  },
+  "checks": [
+   "one short sentence of sympathy",
+   "no persuasion attempt despite the late band",
+   "transfer_to_agent with queue support"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-35",
+  "brief": "A",
+  "family": "Restructuring",
+  "level": "medium",
+  "title": "'Yapılandırma istiyorum'",
+  "variables": {
+   "first_name": "Kaan",
+   "last_name": "Duman",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1987-01-19",
+   "phone_last4": "6273"
+  },
+  "products": [
+   {
+    "type": "car_loan",
+    "past_due": 2400.0,
+    "days_late": 26,
+    "instalment_amount": 800.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on dokuz Ocak seksen yedi\" and phone last four as \"altmış iki yetmiş üç\". After the debt is stated says \"Bu taksitler çok ağır, yapılandırma istiyorum, taksitleri düşürün.\"",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "agent describes no plan, term or instalment of its own",
+   "transfer_to_agent with queue restructuring",
+   "no promise recorded"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-36",
+  "brief": "A",
+  "family": "Persuasion",
+  "level": "hard",
+  "title": "'Faizi silin', refuses twice the first offer, accepts attempt 2",
+  "variables": {
+   "first_name": "Aylin",
+   "last_name": "Keskin",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1986-06-06",
+   "phone_last4": "7420"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 1500.0,
+    "days_late": 19,
+    "instalment_amount": 500.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"altı Haziran seksen altı\" and phone last four as \"yetmiş dört yirmi\". Says \"Önce şu faizi silin, ondan sonra konuşuruz.\" When told that is not possible, to \"Bugün ödeyebilir misiniz?\" says \"Hayır, ödemeyeceğim.\" To the Friday offer says \"Hayır.\" Accepts the minimum on the latest date with \"Peki, o olur.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 500.0,
+     "date": "2026-10-23"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "no discount, waiver or interest removal offered",
+   "attempt 1: full 1500 on Friday 16 October",
+   "attempt 2: floor 500 on the deadline 23 October",
+   "promise 500 on 2026-10-23"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-A-37",
+  "brief": "A",
+  "family": "Conversation",
+  "level": "medium",
+  "title": "Asks to change a recorded promise",
+  "variables": {
+   "first_name": "Erkan",
+   "last_name": "Turan",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1980-09-27",
+   "phone_last4": "1866"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6316",
+    "past_due": 280.0,
+    "days_late": 6,
+    "minimum_payment": 84.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi yedi Eylül seksen\" and phone last four as \"on sekiz altmış altı\". Says \"Yarın tamamını öderim.\" Confirms with \"Evet.\" After the agent says it is recorded, says \"Ya aslında Cuma olsa daha iyi, değiştirebilir misiniz?\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 280.0,
+     "date": "2026-10-15"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "promise recorded once for 2026-10-15 and not changed",
+   "agent says the promise can be changed in the mobile app",
+   "no second create_promise call"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-01",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "'Ayın otuzu' for both, loan deadline is earlier (Friday now)",
+  "variables": {
+   "first_name": "Melek",
+   "last_name": "Coşkun",
+   "title": "Bayan",
+   "now": "2026-10-16T15:00"
+  },
+  "identity": {
+   "date_of_birth": "1988-11-11",
+   "phone_last4": "3027"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "1450",
+    "past_due": 260.0,
+    "days_late": 6,
+    "minimum_payment": 78.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 1350.0,
+    "days_late": 25,
+    "instalment_amount": 450.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on bir Kasım seksen sekiz\" and phone last four as \"otuz yirmi yedi\". Says \"Bugün olmaz. İkisini de ayın otuzunda öderim, tamamını.\" Accepts when told the car loan has an earlier latest date. Confirms once with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 260.0,
+     "date": "2026-10-30"
+    },
+    {
+     "product_id": "p2",
+     "amount": 1350.0,
+     "date": "2026-10-28"
+    }
+   ],
+   "notes": [],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "card recorded on 30 October (early band, deadline 4 Nov)",
+   "car loan recorded on its own deadline Wednesday 28 October and the read-back says so",
+   "one read-back and one confirmation, two create_promise calls"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-02",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Promises the card, refuses the loan (late band)",
+  "variables": {
+   "first_name": "Ahmet",
+   "last_name": "Bulut",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1983-02-14",
+   "phone_last4": "5502"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "8023",
+    "past_due": 300.0,
+    "days_late": 10,
+    "minimum_payment": 90.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 1200.0,
+    "days_late": 12,
+    "instalment_amount": 400.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on dört Şubat seksen üç\" and phone last four as \"elli beş sıfır iki\". Says \"Bugün hiçbirini ödeyemem.\" For the card says \"Kartı haftaya Pazartesi tamamen öderim.\" For the loan says \"Krediyi ödemeyeceğim\" and refuses every offer with \"Hayır.\" Confirms the read-back with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p1",
+     "amount": 300.0,
+     "date": "2026-10-19"
+    }
+   ],
+   "notes": [
+    {
+     "product_id": "p2",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "card promise 300 on Monday 19 October",
+   "two attempts on the loan: 1200 on Friday 16 Oct, then 400 on 23 Oct",
+   "add_note refused for p2",
+   "closed as promise"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-03",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "medium",
+  "title": "Dispute on the card, promise on the loan",
+  "variables": {
+   "first_name": "Zeynep",
+   "last_name": "Kaya",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1990-04-04",
+   "phone_last4": "6611"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "3030",
+    "past_due": 180.0,
+    "days_late": 9,
+    "minimum_payment": 54.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 450.0,
+    "days_late": 5,
+    "instalment_amount": 150.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"dört Nisan doksan\" and phone last four as \"altmış altı on bir\". After both products are stated says \"Bu kredi kartı benim değil, öyle bir kartım hiç olmadı.\" For the loan says \"Krediyi bu Cuma tamamen öderim.\" Confirms with \"Evet.\"",
+  "expected": {
+   "outcome": "promise",
+   "reason": null,
+   "promises": [
+    {
+     "product_id": "p2",
+     "amount": 450.0,
+     "date": "2026-10-16"
+    }
+   ],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "dispute"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "the dispute does not end the call",
+   "add_note dispute for p1, no persuasion on the card",
+   "loan promise 450 on 2026-10-16"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-04",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Restructuring requested mid-call, nothing recorded yet",
+  "variables": {
+   "first_name": "Murat",
+   "last_name": "Şahin",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1978-07-21",
+   "phone_last4": "9140"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "5151",
+    "past_due": 400.0,
+    "days_late": 11,
+    "minimum_payment": 120.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 2100.0,
+    "days_late": 11,
+    "instalment_amount": 700.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 600.0,
+    "days_late": 4,
+    "instalment_amount": 200.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi bir Temmuz yetmiş sekiz\" and phone last four as \"doksan bir kırk\". Says \"Bugün olmaz.\" For the card says \"Kartı bu Cuma öderim.\" When the personal loan is discussed says \"Bu krediyi ödeyemiyorum, yapılandırma istiyorum, taksitlendirme yapın.\"",
+  "expected": {
+   "outcome": "transferred",
+   "reason": "restructuring",
+   "promises": [],
+   "notes": [],
+   "callbacks": [],
+   "transfers": [
+    {
+     "queue": "restructuring"
+    }
+   ]
+  },
+  "checks": [
+   "the agreed card promise is not recorded (not yet confirmed)",
+   "no add_note calls at all",
+   "transfer_to_agent with queue restructuring",
+   "agent describes no plan"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-05",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "medium",
+  "title": "Both products already paid",
+  "variables": {
+   "first_name": "Elif",
+   "last_name": "Yılmaz",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1992-09-19",
+   "phone_last4": "2048"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "6677",
+    "past_due": 150.0,
+    "days_late": 4,
+    "minimum_payment": 45.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 500.0,
+    "days_late": 4,
+    "instalment_amount": 167.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"on dokuz Eylül doksan iki\" and phone last four as \"yirmi kırk sekiz\". After both are stated says \"İkisini de dün ödedim, kartı da arabayı da, dekontlar bende.\"",
+  "expected": {
+   "outcome": "paid",
+   "reason": null,
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "paid"
+    },
+    {
+     "product_id": "p2",
+     "reason": "paid"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "add_note paid for each product",
+   "agent says payments can take one business day to appear",
+   "closed as paid"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-06",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "hard",
+  "title": "Card already paid, loan refused → reason refused",
+  "variables": {
+   "first_name": "Hakan",
+   "last_name": "Demir",
+   "title": "Bay",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1985-05-25",
+   "phone_last4": "7766"
+  },
+  "products": [
+   {
+    "type": "credit_card",
+    "card_last4": "2121",
+    "past_due": 210.0,
+    "days_late": 3,
+    "minimum_payment": 63.0
+   },
+   {
+    "type": "personal_loan",
+    "past_due": 390.0,
+    "days_late": 6,
+    "instalment_amount": 130.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"yirmi beş Mayıs seksen beş\" and phone last four as \"yetmiş yedi altmış altı\". Says \"Kartı geçen hafta ödedim zaten.\" For the loan says \"Onu ödemeyeceğim\" and refuses the offer with \"Hayır, olmaz.\"",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "refused",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "paid"
+    },
+    {
+     "product_id": "p2",
+     "reason": "refused"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "add_note paid for p1, refused for p2",
+   "one persuasion attempt on the loan (early band): 390 on Friday 16 October",
+   "closed no_promise / refused (first non-paid note)"
+  ],
+  "language": "tr"
+ },
+ {
+  "id": "TR-B-07",
+  "brief": "B",
+  "family": "Multi-product",
+  "level": "medium",
+  "title": "Job loss, declines support, notes hardship on each",
+  "variables": {
+   "first_name": "Selin",
+   "last_name": "Aydın",
+   "title": "Bayan",
+   "now": "2026-10-14T11:00"
+  },
+  "identity": {
+   "date_of_birth": "1994-12-03",
+   "phone_last4": "8303"
+  },
+  "products": [
+   {
+    "type": "personal_loan",
+    "past_due": 820.0,
+    "days_late": 15,
+    "instalment_amount": 274.0
+   },
+   {
+    "type": "car_loan",
+    "past_due": 310.0,
+    "days_late": 2,
+    "instalment_amount": 104.0
+   }
+  ],
+  "script": "Speaks Turkish only. Confirms identity with \"Evet, benim.\" Gives date of birth as \"üç Aralık doksan dört\" and phone last four as \"seksen üç sıfır üç\". After both are stated says \"İşten çıkarıldım, hiçbirini ödeyemem.\" Declines the support team with \"Hayır, istemiyorum.\"",
+  "expected": {
+   "outcome": "no_promise",
+   "reason": "hardship",
+   "promises": [],
+   "notes": [
+    {
+     "product_id": "p1",
+     "reason": "hardship"
+    },
+    {
+     "product_id": "p2",
+     "reason": "hardship"
+    }
+   ],
+   "callbacks": [],
+   "transfers": []
+  },
+  "checks": [
+   "one sentence of sympathy, no persuasion on either product",
+   "support team offered once and declined, no transfer",
+   "add_note hardship for both products; closed no_promise / hardship"
+  ],
+  "language": "tr"
+ }
+]
