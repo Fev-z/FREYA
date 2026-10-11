@@ -67,7 +67,23 @@ Interest, fees, legal consequences, card closure, credit score effects, statemen
 - Amounts and dates read back the way people say them: "dört yüz yirmi lira", "on altı Ekim Cuma".
 - Short sentences. A Turkish phone sentence over ~20 words sounds read from a script.
 
-## 7. How to build this into the workflow (checklist)
+## 7. Hard-case mechanics (from research on repair, Turkish pragmatics and judge behaviour)
+
+| Situation | Mechanism | Turkish example |
+|---|---|---|
+| "Evet", "hı hı", "tamam tamam" while the agent is still reading back, or right before the customer adds something | Not consent. Consent is an explicit answer to the confirmation question with no new value in the same turn; route on an extracted `confirm_act` enum (`confirmed` / `changed` / `hedged` / `other`) | "Doğru anladıysam 16 Ekim Cuma, 420 lira. Onaylıyor musunuz?" |
+| Hedges that sound like yes: "bakarız", "inşallah", "bir ara", "elimden geleni yaparım", "söz veremem", "olur herhalde", excuses ("maaş gecikti", "eşim bilir") | No commitment. Ask one closed question; if it is still a hedge, apply the documents' vague-date / refusal rule. Never record a hedge | "Bu tarihi ödeme sözü olarak kaydetmemi ister misiniz, evet mi hayır mı?" |
+| Guess-confirmation before identity ("kredi kartım için mi arıyorsunuz?", "borcum ne kadar, 400 mü?") | Neither confirm nor deny; identity first | "Bilgi verebilmem için önce kimliğinizi doğrulamam gerekiyor." |
+| The speaker changes, or says "ben eşiyim" after the questions | Third party from that moment: nothing more is disclosed | (third-party rule) |
+| The customer starts reading a card number, PIN, password or SMS code | Stop them at once, never ask for or repeat it, continue | "Lütfen kart numaranızı, şifrenizi veya SMS kodunuzu paylaşmayın; bunlara ihtiyacım yok." |
+| Not understood | Repair ladder: 1st time rephrase shorter; 2nd time an either/or question; 3rd time the documents' unclear / no-answer rule | "Cuma mı demiştiniz, Pazartesi mi?" |
+| The customer insists after a refusal the rules require | Same answer, at most twice, no new offer; then the documents' refusal / insistence outcome | "Maalesef bunu yapamıyorum; yapabileceğim ... ." |
+| An interrupt in the middle of a question | Answer it in one sentence, then repeat the pending question exactly; keep the pending question in a variable if a global node handles the interrupt | |
+| A turn with two requests ("ödemeyi Cuma yaparım ama faizi de sileceksiniz") | Handle the rule-bound part first (the date), answer the other part per the documents (no discount), then confirm | |
+
+Judge-proofing before every save: search all prompts and fixed lines for promises of actions no tool performs and remove them: "not aldım", "ilettim", "kaydettim" (without a write tool result), "sizi arayacağız", "size dönüş yapılacak", "I have noted", "I've passed this on", "we will call you back" (unless a tool schedules it). Closing sentences come from the outcome code, not from the model.
+
+## 8. How to build this into the workflow (checklist)
 
 - `system_prompt`: the priority list (section 1, shortened), the 4-step protocol (section 2, two lines), section 4's commitment rule, the register (section 6, two lines). Keep it under ~25 lines; the step prompts carry the rest.
 - `global_nodes`: one per row of section 3 that the documents do not already handle in a step, with a fixed line and `__previous__`, or a route to the documents' outcome (human, refusal, hardship). Exclude terminal nodes; exclude the identity step for interrupts that would expose data.
