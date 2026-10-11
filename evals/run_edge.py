@@ -51,10 +51,10 @@ def persona_for(case, ident, style=None):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("agent_id", nargs="?"); ap.add_argument("--validate", action="store_true"); ap.add_argument("--brief"); ap.add_argument("--cases", default=str(ROOT / "evals" / "edge_cases.json")); ap.add_argument("--out"); ap.add_argument("--only"); ap.add_argument("--reps", type=int, default=1); ap.add_argument("--style", choices=sorted(STYLES)); ap.add_argument("--rerun-if-slow", type=int, default=0)
     a = ap.parse_args()
-    errs = validate(json.load(open(a.cases)))
+    cases_all = json.load(open(a.cases, encoding="utf-8"))
+    errs = validate(cases_all)
     if errs or a.validate:
-        print("
-".join(errs) if errs else "edge cases valid"); sys.exit(1 if errs else 0)
+        print("\n".join(errs) if errs else f"edge cases valid: {len(cases_all)} cases"); sys.exit(1 if errs else 0)
     if not a.agent_id: ap.error("agent_id is required unless --validate")
     cases = [c for c in json.load(open(a.cases)) if (not a.brief or c["brief"] == a.brief) and (not a.only or c["id"] in a.only.split(","))]
     ident = {c["id"]: {"identity": c["identity"]} for c in cases}

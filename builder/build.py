@@ -15,7 +15,7 @@ Outputs:
 
 Needs FREYA_API_KEY, FREYA_BANK_TEAM_KEY and a Claude login or ANTHROPIC_API_KEY.
 """
-import asyncio, dataclasses, json, os, pathlib, sys, time
+import asyncio, dataclasses, json, os, pathlib, re, sys, time
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
@@ -72,7 +72,9 @@ class Trace:
                 if isinstance(b, ToolResultBlock):
                     text = b.content if isinstance(b.content, str) else json.dumps(b.content, default=str)
                     for ln in text.splitlines():
-                        if (" passed" in ln and " / " in ln) or ln.startswith("SMOKE ") or ln.startswith("lint:"):
+                        ln = ln.strip()
+                        if re.match(r"^\d+ / \d+ passed", ln) or ln.startswith("SMOKE ") or re.match(r"^lint: \d+ errors", ln) \
+                                or re.match(r"^(PASS|FAIL) (PUB|EDGE)-", ln):
                             self.tests.append(ln.strip())
                             self.line(f"    self-test: {ln.strip()[:200]}")
 

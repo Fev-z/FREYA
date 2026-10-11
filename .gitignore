@@ -8,3 +8,6 @@ results/
 .personas.json
 .claude_cwd/
 .localbin/
+.freya-agents.json
+out/
+results_*.log
