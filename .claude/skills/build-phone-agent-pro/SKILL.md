@@ -12,12 +12,13 @@ Work from the repository root. Never copy a rule, value, name or date from anoth
 ## Time plan (hard limit: the budget in your prompt)
 
 1. **Read** (≈4 min): every line of the brief file(s), the tool API file, `docs/workflow-format.md`, `docs/tools-and-code.md`. Skim `examples/base-agent.json` for valid JSON shapes only.
-2. **Spec** (≈5 min): write `out/<slot>.spec.json` (schema: `builder/lib/spec_schema.md`). Every rule gets an id and its verbatim text.
-3. **Workflow** (≈8 min): write `out/<slot>.workflow.json` following the blueprint below. Generate date/amount code with `builder/lib` (see "Deterministic layer").
-4. **Lint**: `python3 builder/lint.py out/<slot>.workflow.json <tool_api>` until it reports 0 errors. Fix warnings that matter.
-5. **Save**: `python3 -c "import freya,json,sys; print(json.dumps(freya.save_workflow(sys.argv[1], json.load(open(sys.argv[2])))))" <slot> out/<slot>.workflow.json`. Save a first valid version EARLY; later saves update it in place.
-6. **Self-test**: `python3 builder/smoke.py <workflow_id>` always. If your prompt says the brief has practice customers, also `python3 tools/run_cases.py <agent_id> --brief <A|B>` in the FOREGROUND and wait for it (3-11 min). Read every FAIL reason. Fix the workflow file, lint, save, test again. At most two fix rounds; stop with time to spare.
-7. **Finish** with one line: workflow_id, agent_id, last test result.
+2. **Checklist**: read `.claude/skills/build-phone-agent-pro/checklist.md` (universal collections-call situations: spoken dates and amounts in English and Turkish, numbers in pieces, corrections, conversation traps, tool honesty). Every row must be handled by the brief's rule or by the safe default it gives; note where in `out/<slot>.coverage.md`. If the brief says the calls are in Turkish (or another language), every fixed line and prompt instruction about speech uses that language.
+3. **Spec** (≈5 min): write `out/<slot>.spec.json` (schema: `builder/lib/spec_schema.md`). Every rule gets an id and its verbatim text.
+4. **Workflow** (≈8 min): write `out/<slot>.workflow.json` following the blueprint below. Generate date/amount code with `builder/lib` (see "Deterministic layer").
+5. **Lint**: `python3 builder/lint.py out/<slot>.workflow.json <tool_api>` until it reports 0 errors. Fix warnings that matter.
+6. **Save**: `python3 -c "import freya,json,sys; print(json.dumps(freya.save_workflow(sys.argv[1], json.load(open(sys.argv[2])))))" <slot> out/<slot>.workflow.json`. Save a first valid version EARLY; later saves update it in place.
+7. **Self-test**: `python3 builder/smoke.py <workflow_id>` always. If your prompt says the brief has practice customers, also `python3 tools/run_cases.py <agent_id> --brief <A|B>` in the FOREGROUND and wait for it (3-11 min). Read every FAIL reason. Fix the workflow file, lint, save, test again. At most two fix rounds; stop with time to spare.
+8. **Finish** with one line: workflow_id, agent_id, last test result.
 
 Never end your turn while a test is running. Never edit the agent on the platform by hand. Never weaken a test.
 
@@ -91,6 +92,8 @@ Check your spec for each line. If the brief has a rule, follow it exactly. If it
 ## Deterministic layer (`builder/lib`)
 
 Write the workflow with a small generator script `out/gen_<slot>.py` that reads `out/<slot>.spec.json` and the tool API file, and builds nodes with `builder/lib/wfkit.py` (valid shapes for api tools, lifecycle close_call, code nodes, api_request nodes, end nodes, conditions, enum extraction). Take the tool URL base and every body field/enum from the tool API file with `wfkit.api_base` and `wfkit.api_body_fields`; never type them by hand. The `out/` folder starts empty on every run: write everything for this brief fresh.
+
+Spoken values: `builder/lib/spoken.py` parses Turkish and English spoken amounts ("dört yüz elli virgül beş", "1.250,50 TL", "four hundred and fifty-five"), digit strings in pieces ("kırk dört yetmiş bir" -> "4471", leading zeros kept) and dates ("haftaya Cuma", "ayın on beşi", "yirmi üç Ekim", "next Friday", "15/10", dates of birth). `spoken.hook_source()` returns it as a self-contained snippet: prepend it to the pre-hooks of verify_identity, create_promise and schedule_callback so a value the model sent in words or in a wrong format is coerced to the API format before the call (keep the original if parsing fails).
 
 Read `builder/lib/spec_schema.md`. Use `builder/lib/codegen.py` to emit the code for the `setup`/`account_facts` code nodes and the post-hooks from your spec, for example:
 
